@@ -22,8 +22,8 @@ const confirmEmail = user => {
   const smtpTransport = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "together0chat@gmail.com",
-      pass: "qweasdzxc0"
+      user: "ssgatalyak@gmail.com",
+      pass: "qwert-11"
     }
   });
   bcrypt.hash(user.email, 10, (err, hash) => {

@@ -10,7 +10,7 @@ AWS.config = require('../const/aws-config.json');
 const saveToBucket = (req, res, next) => {
   const { post } = req.body;
   const s3 = new AWS.S3();
-  const myBucket = 'pixelistic';
+  const myBucket = 'pixelsss';
   const data = post.image.replace(/^data:image\/\w+;base64,/, '');
   const buffer = new Buffer(data, 'base64');
   const ext = post.image.split(';')[0].split('/')[1];

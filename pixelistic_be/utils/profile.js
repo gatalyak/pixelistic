@@ -4,7 +4,7 @@ AWS.config = require('../const/aws-config.json');
 const saveAvatar = (req, res, next) => {
   if (req.body.avatar && req.body.avatar.startsWith('data:image')) {
     const s3 = new AWS.S3();
-    const myBucket = 'pixelistic';
+    const myBucket = 'pixelsss';
     const data = req.body.avatar.replace(/^data:image\/\w+;base64,/, '');
     const buffer = new Buffer(data, 'base64');
     const ext = req.body.avatar.split(';')[0].split('/')[1];
