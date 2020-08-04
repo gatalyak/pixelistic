@@ -1,11 +1,20 @@
-FROM node:10-alpine AS build
-WORKDIR /usr/src/app
-COPY package*.json ./
-RUN npm install -g @angular/cli@9.0.6
-RUN npm install
-COPY . .
-RUN ng build
+FROM node:10
 
-FROM nginx:1.19
-COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /usr/src/app/dist/BookCrossingFrontEnd/ /srv/myapp
+# Create app directory
+WORKDIR /usr/src/app
+
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
+
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
+
+# Bundle app source
+COPY . .
+
+EXPOSE 8080
+CMD [ "node", "./bin/www" ]
+
