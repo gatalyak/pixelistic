@@ -1,0 +1,55 @@
+version: '3.7'
+
+services:
+    web:
+        build:
+            context: ./pixelistic_fe
+            dockerfile: Dockerfile
+        init: true
+        volumes:
+            - ./Bookcrossing-Front-End:/usr/src/app
+            - /usr/src/app/node_modules
+            - /usr/src/app/dist
+        environment:
+            - NODE_ENV=prod
+        #command: ng serve --host 0.0.0.0
+        ports:
+            - 80:80
+        networks:
+            - frontend
+    api:
+        build:
+            network: host
+            context: ./pixelistic_be
+            dockerfile: Dockerfile
+        init: true
+        ports:
+            - 8080:8080
+        depends_on:
+            - mongo_db
+        environment:
+          - MongoSettings__ConnectionString=mongodb://mongo_db:27017
+          - mongoose__connect=mongodb://admin:P@ssw0rdM@mongo_dbmongo_db:27017/pixelapp
+          - MongoSettings__DatabaseName=BookCrossingDB
+        networks:
+            - frontend
+            - backend
+    mongo_db:
+        image: mongo:4
+        init: true
+        volumes:
+            - mongo-data:/data/db:cached
+        working_dir: /usr/src/app
+        environment:
+            - MONGO_INITDB_DATABASE=pixelapp
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=P@ssw0rdM
+        networks:
+            - backend
+networks:
+    frontend:
+    backend:
+volumes:
+    mongo-data:
+
+
