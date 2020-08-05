@@ -6,30 +6,27 @@ services:
             context: ./pixelistic_fe
             dockerfile: Dockerfile
         init: true
-        volumes:
-            - ./Bookcrossing-Front-End:/usr/src/app
-            - /usr/src/app/node_modules
-            - /usr/src/app/dist
         environment:
             - NODE_ENV=prod
         #command: ng serve --host 0.0.0.0
         ports:
             - 80:80
+        depends_on:
+            - api
         networks:
             - frontend
     api:
         build:
-            network: host
             context: ./pixelistic_be
             dockerfile: Dockerfile
         init: true
         ports:
-            - 8080:8080
+            - 3000:3000
         depends_on:
             - mongo_db
         environment:
           - MongoSettings__ConnectionString=mongodb://mongo_db:27017
-          - mongoose__connect=mongodb://admin:P@ssw0rdM@mongo_dbmongo_db:27017/pixelapp
+          - mongoose__connect=mongodb://admin:PassMongo@mongo_db:27017/pixelapp
           - MongoSettings__DatabaseName=BookCrossingDB
         networks:
             - frontend
@@ -37,13 +34,15 @@ services:
     mongo_db:
         image: mongo:4
         init: true
+        ports:
+            - '27017-27019:27017-27019'
         volumes:
+            - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
             - mongo-data:/data/db:cached
-        working_dir: /usr/src/app
         environment:
             - MONGO_INITDB_DATABASE=pixelapp
-            - MONGO_INITDB_ROOT_USERNAME=admin
-            - MONGO_INITDB_ROOT_PASSWORD=P@ssw0rdM
+            - MONGO_INITDB_ROOT_USERNAME=root
+            - MONGO_INITDB_ROOT_PASSWORD=PassMongo
         networks:
             - backend
 networks:
