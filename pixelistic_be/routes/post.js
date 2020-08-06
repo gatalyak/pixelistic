@@ -5,12 +5,12 @@ const authenticate = expressJwt({secret : 'server secret'});
 const Post = require('../models/post');
 const { User } = require('../models/user');
 var AWS = require('aws-sdk');
-AWS.config = require('../const/aws-config.json');
+//AWS.config = require('../const/aws-config.json');
 
 const saveToBucket = (req, res, next) => {
   const { post } = req.body;
   const s3 = new AWS.S3();
-  const myBucket = 'pixelsss';
+  const myBucket = process.env.AWS_S3_BUCKET;
   const data = post.image.replace(/^data:image\/\w+;base64,/, '');
   const buffer = new Buffer(data, 'base64');
   const ext = post.image.split(';')[0].split('/')[1];

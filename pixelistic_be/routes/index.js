@@ -22,8 +22,8 @@ const confirmEmail = user => {
   const smtpTransport = nodemailer.createTransport({
     service: "Gmail",
     auth: {
-      user: "ssgatalyak@gmail.com",
-      pass: "qwert-11"
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
   bcrypt.hash(user.email, 10, (err, hash) => {
@@ -126,8 +126,8 @@ router.post('/forgot', User.isEmailDB, (req, res, next) => {
   const smtpTransport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
-      user: 'together0chat@gmail.com',
-      pass: 'qweasdzxc0',
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
     }
   });
  

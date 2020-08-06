@@ -1,5 +1,6 @@
 FROM node:10
 
+
 # Copy script to check for services
 #COPY docker/wait-for /wait-for
 #RUN chmod +x wait-for
@@ -18,6 +19,9 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+
+
+
 
 RUN chmod +x wait-for-it.sh
 

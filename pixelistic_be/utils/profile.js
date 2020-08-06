@@ -1,10 +1,10 @@
 var AWS = require('aws-sdk');
-AWS.config = require('../const/aws-config.json');
+//AWS.config = require('../const/aws-config.json');
 
 const saveAvatar = (req, res, next) => {
   if (req.body.avatar && req.body.avatar.startsWith('data:image')) {
     const s3 = new AWS.S3();
-    const myBucket = 'pixelsss';
+    const myBucket = process.env.AWS_S3_BUCKET;
     const data = req.body.avatar.replace(/^data:image\/\w+;base64,/, '');
     const buffer = new Buffer(data, 'base64');
     const ext = req.body.avatar.split(';')[0].split('/')[1];
