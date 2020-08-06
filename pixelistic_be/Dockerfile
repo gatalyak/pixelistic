@@ -1,5 +1,9 @@
 FROM node:10
 
+# Copy script to check for services
+#COPY docker/wait-for /wait-for
+#RUN chmod +x wait-for
+
 # Create app directory
 WORKDIR /usr/src/app
 
@@ -14,6 +18,9 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+
+RUN chmod +x wait-for-it.sh
+
 
 EXPOSE 3000
 CMD [ "node", "./bin/www" ]

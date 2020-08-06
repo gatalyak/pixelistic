@@ -5,10 +5,11 @@ services:
         build:
             context: ./pixelistic_fe
             dockerfile: Dockerfile
+            args:
+              - REACT_APP_API_WEB=http://${API_WEB}
         init: true
         environment:
-            - NODE_ENV=prod
-        #command: ng serve --host 0.0.0.0
+            - NODE_ENV=development
         ports:
             - 80:80
         depends_on:
@@ -24,10 +25,7 @@ services:
             - 3000:3000
         depends_on:
             - mongo_db
-        environment:
-          - MongoSettings__ConnectionString=mongodb://mongo_db:27017
-          - mongoose__connect=mongodb://admin:PassMongo@mongo_db:27017/pixelapp
-          - MongoSettings__DatabaseName=BookCrossingDB
+        entrypoint: ["./wait-for-it.sh", "mongo_db:27017","-t", "15", "--","node", "./bin/www"]
         networks:
             - frontend
             - backend
@@ -35,7 +33,7 @@ services:
         image: mongo:4
         init: true
         ports:
-            - '27017-27019:27017-27019'
+            - 27017:27017
         volumes:
             - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
             - mongo-data:/data/db:cached

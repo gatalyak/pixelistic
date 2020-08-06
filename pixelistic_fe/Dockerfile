@@ -8,8 +8,10 @@ WORKDIR /pixelistic_fe
 
 COPY . .
 
-RUN npm run build
+ARG REACT_APP_API_WEB
+ENV REACT_APP_API_WEB $REACT_APP_API_WEB
 
+RUN npm run build
 
 
 # ------------------------------------------------------
@@ -20,5 +22,6 @@ COPY --from=builder /pixelistic_fe/build /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 80
+
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
