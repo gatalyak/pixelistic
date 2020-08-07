@@ -45,8 +45,8 @@ services:
         ports:
             - 27017:27017
         volumes:
-            - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
-            - mongo-data:/data/db:cached
+            - ${WEBAPP_STORAGE_HOME}/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+            - ${WEBAPP_STORAGE_HOME}/mongo-data:/data/db:cached
         environment:
             - MONGO_INITDB_DATABASE=${DB_NAME}
             - MONGO_INITDB_ROOT_USERNAME=root
