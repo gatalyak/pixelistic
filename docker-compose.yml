@@ -12,7 +12,7 @@ services:
         environment:
             - NODE_ENV=development
         ports:
-            - 80:80
+            - "80:80"
         depends_on:
             - api
         networks:
@@ -32,7 +32,7 @@ services:
           - EMAIL_PASS=${EMAIL_PASS}
           - FRONT_URL=${FRONT_URL}
         ports:
-            - 3000:3000
+            - "3000:3000"
         depends_on:
             - mongo_db
         entrypoint: ["./wait-for-it.sh", "mongo_db:27017","-t", "15", "--","node", "./bin/www"]
@@ -43,7 +43,7 @@ services:
         image: mongo:4
         init: true
         ports:
-            - 27017:27017
+            - "27017:27017"
         volumes:
             - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
             - mongo-data:/data/db:cached
