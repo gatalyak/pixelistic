@@ -12,7 +12,7 @@ variables:
 - group: pixelistic
   # Container registry service connection established during pipeline creation
 - name: dockerRegistryServiceConnection
-  value: 'a16bc1f4-2188-42b3-a84c-edcf7493bfc2'  
+  value: '82e8bbb1-3614-4aed-a6fa-5ad73eb9fab1'  
 - name: imageRepositoryfe
   value: 'gatalyakpixelisticfe'
 - name: imageRepositorybe
@@ -79,7 +79,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'gatalyakpixelistic'
+    environment: 'gatalyakpixelistic.pixelistic'
     strategy:
       runOnce:
         deploy:
@@ -202,7 +202,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'gatalyakpixelistic'
+    environment: 'gatalyakpixelistic.pixelistic'
     strategy:
       runOnce:
         deploy:
