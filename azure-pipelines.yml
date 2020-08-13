@@ -15,14 +15,21 @@ variables:
   value: '5e09e0b0-dbbc-4dcd-80dc-d1d4bd5bbcd8'
 - name: imageRepositoryfe
   value: 'gatalyakpixelisticfe'
+- name: imageRepositorybe
+  value: 'gatalyakpixelisticbe'
 - name: containerRegistry
   value: 'pixelisticacr.azurecr.io'
 - name: dockerfilePathfe
   value: '**/pixelistic_fe/Dockerfile'
+- name: dockerfilePathbe
+  value: '**/pixelistic_be/Dockerfile'
 - name: tag
   value: '$(Build.BuildId)'
 - name: imagePullSecretfe
   value: 'pixelisticacr5d3a-auth'
+- name:  imagePullSecretbe
+  value: 'pixelisticacr196930c5-auth'
+
 
   # Agent VM image name
 - name: vmImageName
@@ -161,36 +168,6 @@ stages:
 # Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-trigger:
-- master
-
-resources:
-- repo: self
-
-variables:
-- group: pixelistic
-# Container registry service connection established during pipeline creation
-- name: dockerRegistryServiceConnection
-  value: '7b5a1ea9-b7d0-4fb1-bb14-fe6c92a30ac0'
-- name: imageRepository
-  value: 'gatalyakpixelisticbe'
-- name: containerRegistry
-  value: 'pixelisticacr.azurecr.io'
-- name: dockerfilePath
-  value: '**/Dockerfile'
-- name: tag
-  value: '$(Build.BuildId)'  
-- name:  imagePullSecret
-  value: 'pixelisticacr196930c5-auth'
-
-  # Agent VM image name
-- name: vmImageName
-  value: 'ubuntu-latest'
-  
-  # Name of the new namespace being created to deploy the PR changes.
-- name:  k8sNamespaceForPR
-  value: 'review-app-$(System.PullRequest.PullRequestId)'
-
 stages:
 - stage: Build
   displayName: Build stage
@@ -204,8 +181,8 @@ stages:
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
+        repository: $(imageRepositorybe)
+        dockerfile: $(dockerfilePathbe)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
@@ -240,7 +217,7 @@ stages:
             displayName: Create imagePullSecret
             inputs:
               action: createSecret
-              secretName: $(imagePullSecret)
+              secretName: $(imagePullSecretbe)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
               
           - task: KubernetesManifest@0
@@ -253,7 +230,7 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+                $(containerRegistry)/$(imageRepositorybe):$(tag)
   - deployment: DeployPullRequest
     displayName: Deploy Pull request
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/pull/'))
@@ -293,7 +270,7 @@ stages:
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
+                $(containerRegistry)/$(imageRepositorybe):$(tag)
           
           - task: Kubernetes@1
             name: get
