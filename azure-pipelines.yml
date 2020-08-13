@@ -66,8 +66,8 @@ stages:
         tags: |
           $(tag)
           
-    - upload: manifests
-      artifact: manifests
+    - upload: pixelistic_fe/manifests
+      artifact: pixelistic_fe/manifests
 
 - stage: Deploy_fe
   displayName: Deploy stage
@@ -188,8 +188,8 @@ stages:
         tags: |
           $(tag)
           
-    - upload: manifests
-      artifact: manifests
+    - upload: pixelistic_be/manifests
+      artifact: pixelistic_be/manifests
 
 - stage: Deploy_be
   displayName: Deploy stage
