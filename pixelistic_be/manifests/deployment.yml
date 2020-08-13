@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gatalyakpixelisticbe
+  labels:
+    app: gatalyakpixelisticbe  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gatalyakpixelisticbe  
+  template:
+    metadata:
+      labels:
+        app: gatalyakpixelisticbe 
+    spec:
+      containers:
+        - name: gatalyakpixelisticbe 
+          image: pixelisticacr.azurecr.io/gatalyakpixelisticbe
+          ports:
+          - containerPort: 3000
+          env:
+          - name: MONGO_DB
+            value: __MONGO_DB__
+          - name: FRONT_URL
+            value: __FRONT_URL__
+          - name: AWS_ACCESS_KEY_ID
+            value: __AWS_ACCESS_KEY_ID__
+          - name: AWS_SECRET_ACCESS_KEY
+            value: __AWS_SECRET_ACCESS_KEY__
+          - name: AWS_REGION
+            value: __AWS_REGION__
+          - name: AWS_S3_BUCKET
+            value: __AWS_S3_BUCKET__
+          - name: EMAIL_USER
+            value: __EMAIL_USER__
+          - name: EMAIL_PASS
+            value: __EMAIL_PASS__
