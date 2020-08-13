@@ -18,7 +18,7 @@ variables:
 - name: containerRegistry
   value: 'pixelisticacr.azurecr.io'
 - name: dockerfilePath
-  value: '**/Dockerfile'
+  value: '**/pixelistic_fe/Dockerfile'
 - name: tag
   value: '$(Build.BuildId)'
 - name: imagePullSecret
@@ -89,8 +89,8 @@ stages:
             inputs:
               action: deploy
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
+                $(Pipeline.Workspace)/pixelistic_fe/manifests/deployment.yml
+                $(Pipeline.Workspace)/pixelistic_fe/manifests/service.yml
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
@@ -129,8 +129,8 @@ stages:
               action: deploy
               namespace: $(k8sNamespaceForPR)
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
+                $(Pipeline.Workspace)/pixelistic_fe/manifests/deployment.yml
+                $(Pipeline.Workspace)/pixelistic_fe/manifests/service.yml
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
@@ -231,7 +231,7 @@ stages:
           - task: qetza.replacetokens.replacetokens-task.replacetokens@3
             displayName: Replace tokens in **/*
             inputs:
-              rootDirectory: $(Pipeline.Workspace)/manifests
+              rootDirectory: $(Pipeline.Workspace)/pixelistic_be/manifests
               targetFiles: '**/*.yml'
               keepToken: true
               tokenPrefix: __
@@ -248,8 +248,8 @@ stages:
             inputs:
               action: deploy
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
+                $(Pipeline.Workspace)/pixelistic_be/manifests/deployment.yml
+                $(Pipeline.Workspace)/pixelistic_be/manifests/service.yml
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
@@ -288,8 +288,8 @@ stages:
               action: deploy
               namespace: $(k8sNamespaceForPR)
               manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
+                $(Pipeline.Workspace)/pixelistic_be/manifests/deployment.yml
+                $(Pipeline.Workspace)/pixelistic_be/manifests/service.yml
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
