@@ -12,7 +12,7 @@ variables:
 - group: pixelistic
   # Container registry service connection established during pipeline creation
 - name: dockerRegistryServiceConnection
-  value: '5e09e0b0-dbbc-4dcd-80dc-d1d4bd5bbcd8'
+  value: 'a16bc1f4-2188-42b3-a84c-edcf7493bfc2'  
 - name: imageRepositoryfe
   value: 'gatalyakpixelisticfe'
 - name: imageRepositorybe
@@ -26,7 +26,7 @@ variables:
 - name: tag
   value: '$(Build.BuildId)'
 - name: imagePullSecretfe
-  value: 'pixelisticacr366824fa-auth'
+  value: 'pixelisticacr5d3a-auth'
 - name:  imagePullSecretbe
   value: 'pixelisticacr196930c5-auth'
 
