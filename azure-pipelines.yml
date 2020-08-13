@@ -79,7 +79,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'gatalyakpixelisticfe.pixelistic'
+    environment: 'gatalyakpixelistic'
     strategy:
       runOnce:
         deploy:
@@ -108,7 +108,7 @@ stages:
     pool:
       vmImage: $(vmImageName)
       
-    environment: 'gatalyakpixelisticfe.$(k8sNamespaceForPR)'
+    environment: 'gatalyakpixelistic.$(k8sNamespaceForPR)'
     strategy:
       runOnce:
         deploy:
@@ -201,7 +201,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'gatalyakpixelisticbe.pixelistic'
+    environment: 'gatalyakpixelistic'
     strategy:
       runOnce:
         deploy:
@@ -238,7 +238,7 @@ stages:
     pool:
       vmImage: $(vmImageName)
       
-    environment: 'gatalyakpixelisticbe.$(k8sNamespaceForPR)'
+    environment: 'gatalyakpixelistic.$(k8sNamespaceForPR)'
     strategy:
       runOnce:
         deploy:
