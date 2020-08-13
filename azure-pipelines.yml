@@ -172,7 +172,6 @@ stages:
 
 - stage: Build_be
   displayName: Build stage
-  dependsOn: Deploy_fe  
   jobs:  
   - job: Build
     displayName: Build
