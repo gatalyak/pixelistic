@@ -45,7 +45,7 @@ services:
         image: mongo:4
         init: true
         ports:
-            - "27017"
+            - "27017:27017"
         restart: always    
         volumes:
             - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
@@ -58,6 +58,7 @@ services:
             - DB_USER=${DB_USER}
             - DB_PASSWORD=${DB_PASSWORD}
         networks:
+            - frontend
             - backend
 networks:
     frontend:
