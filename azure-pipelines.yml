@@ -26,9 +26,9 @@ variables:
 - name: tag
   value: '$(Build.BuildId)'
 - name: imagePullSecretfe
-  value: 'pixelisticacr5d3a-auth'
+  value: 'pixelisticacr6209a66c-auth'
 - name:  imagePullSecretbe
-  value: 'pixelisticacr196930c5-auth'
+  value: 'pixelisticacr6209a66c-auth'
 
 
   # Agent VM image name
