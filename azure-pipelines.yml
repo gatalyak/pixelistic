@@ -100,7 +100,7 @@ stages:
                 $(Pipeline.Workspace)/pixelistic_fe/manifests/deployment.yml
                 $(Pipeline.Workspace)/pixelistic_fe/manifests/service.yml
               imagePullSecrets: |
-                $(imagePullSecret)
+                $(imagePullSecretfe)
               containers: |
                 $(containerRegistry)/$(imageRepositoryfe):$(tag)
   - deployment: DeployPullRequest
@@ -230,7 +230,7 @@ stages:
                 $(Pipeline.Workspace)/pixelistic_be/manifests/deployment.yml
                 $(Pipeline.Workspace)/pixelistic_be/manifests/service.yml
               imagePullSecrets: |
-                $(imagePullSecret)
+                $(imagePullSecretbe)
               containers: |
                 $(containerRegistry)/$(imageRepositorybe):$(tag)
   - deployment: DeployPullRequest
@@ -257,7 +257,7 @@ stages:
             displayName: Create imagePullSecret
             inputs:
               action: createSecret
-              secretName: $(imagePullSecret)
+              secretName: $(imagePullSecretbe)
               namespace: $(k8sNamespaceForPR)
               dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
           
@@ -270,7 +270,7 @@ stages:
                 $(Pipeline.Workspace)/pixelistic_be/manifests/deployment.yml
                 $(Pipeline.Workspace)/pixelistic_be/manifests/service.yml
               imagePullSecrets: |
-                $(imagePullSecret)
+                $(imagePullSecretbe)
               containers: |
                 $(containerRegistry)/$(imageRepositorybe):$(tag)
           
