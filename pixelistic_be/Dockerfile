@@ -2,13 +2,6 @@ FROM node:10-alpine AS BUILD_IMAGE
 # couchbase sdk requirements
 RUN apk update && apk add python make g++ && rm -rf /var/cache/apk/*
 
-FROM node:10
-
-
-# Copy script to check for services
-#COPY docker/wait-for /wait-for
-#RUN chmod +x wait-for
-
 # Create app directory
 WORKDIR /usr/src/app
 
