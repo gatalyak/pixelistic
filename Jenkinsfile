@@ -9,14 +9,24 @@ pipeline {
       }
     }
      
-    stage('Build') {
+    stage('Build backend') {
       steps {
         dir('pixelistic_be'){
           sh 'npm install'
-
         }    
       }
     }  
-              
+
+    stage('Build frontend') {
+      steps {
+        dir('pixelistic_fe'){
+          sh 'npm install'
+        }    
+      }
+    }  
+      
+      
+      
+      
   }
 }
