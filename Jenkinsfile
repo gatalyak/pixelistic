@@ -11,8 +11,10 @@ pipeline {
      
     stage('Build') {
       steps {
-        sh 'cd pixelistic_be && npm install'
-         sh '<<Build Command>>'
+                    nodejs(nodeJSInstallationName: 'Node 6.x', configId: '<config-file-provider-id>') {
+                    sh 'cd pixelistic_be && npm install'
+                    sh '<<Build Command>>'   
+            }                     
       }
     }  
     
