@@ -1,3 +1,7 @@
+FROM node:10-alpine AS BUILD_IMAGE
+# couchbase sdk requirements
+RUN apk update && apk add python make g++ && rm -rf /var/cache/apk/*
+
 FROM node:10
 
 
@@ -20,9 +24,14 @@ RUN npm install
 # Bundle app source
 COPY . .
 
+FROM node:10-alpine
+RUN apk update && apk add bash && rm -rf /var/cache/apk/*
 
 
+WORKDIR /usr/src/app
 
+# copy from build image
+COPY --from=BUILD_IMAGE /usr/src/app .
 RUN chmod +x wait-for-it.sh
 
 
