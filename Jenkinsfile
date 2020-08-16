@@ -11,16 +11,12 @@ pipeline {
      
     stage('Build') {
       steps {
-        sh 'cd pixelistic_be && npm install'
-         sh '<<Build Command>>'
+        dir('pixelistic_be'){
+          sh 'npm install'
+
+        }    
       }
     }  
-    
-            
-    stage('Test') {
-      steps {
-        sh 'node test'
-      }
-    }
+              
   }
 }
