@@ -25,7 +25,26 @@ pipeline {
       }
     }  
       
-      
+        stage('Tests'){
+            steps {
+                echo 'Executing tests'
+            }
+        }      
+
+        stage('Deploy'){
+            steps {
+                dir('deployment'){
+                    echo 'Deploying'
+                    sh 'ansible-playbook -i dev-servers site.yml'
+                }
+            }
+        }      
+ 
+        stage('Healthcheck'){
+            steps {
+                echo 'Executing healthcheck'
+            }
+        }      
       
       
   }
