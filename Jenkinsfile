@@ -35,7 +35,7 @@ pipeline {
             steps {
                 dir('deployment'){
                     echo 'Deploying'
-                    sh 'ansible-playbook -i dev-servers site.yml'
+                    sh 'ansible-playbook -i dev-servers site.yml -u root'
                 }
             }
         }      
