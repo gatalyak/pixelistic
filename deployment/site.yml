@@ -1,9 +1,8 @@
 ---
-- hosts: cloud
-  remote_user: clouduser
+- hosts: pixelistic
   roles:
-     - common
-     - deploy
-
+    - { role: mongodb_repository, mongodb_version: "4.0" }
+    - mongodb_install
+    - mongodb_selinux
   vars:
     - skeleton_port: 80
