@@ -4,7 +4,6 @@
     immediate: yes
     permanent: true
     state: enabled
-  firewalld:
     port: "3000/tcp"
     immediate: yes
     permanent: true
