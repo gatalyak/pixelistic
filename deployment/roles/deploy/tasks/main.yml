@@ -25,12 +25,12 @@
 - name: Running backend
   shell: "cd /opt/app && nohup node ./bin/www &"
   environment:
-    FRONT_URL: {{ FRONT_URL }}
-    AWS_ACCESS_KEY_ID: {{ AWS_ACCESS_KEY_ID }} 
-    AWS_SECRET_ACCESS_KEY: {{ AWS_SECRET_ACCESS_KEY }}
-    MONGO_DB: {{ MONGO_DB }}
-    EMAIL_USER: {{ EMAIL_USER }}
-    EMAIL_PASS: {{ EMAIL_PASS }}
+    FRONT_URL: "{{ FRONT_URL }}"
+    AWS_ACCESS_KEY_ID: "{{ AWS_ACCESS_KEY_ID }}"
+    AWS_SECRET_ACCESS_KEY: "{{ AWS_SECRET_ACCESS_KEY }}"
+    MONGO_DB: "{{ MONGO_DB }}"
+    EMAIL_USER: "{{ EMAIL_USER }}"
+    EMAIL_PASS: "{{ EMAIL_PASS }}"
       
 
    
