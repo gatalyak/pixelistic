@@ -15,6 +15,7 @@ pipeline {
         git 'https://github.com/gatalyak/pixelistic.git'
       }
     }    
+/*
       
     stage('Build backend') {
       steps {
@@ -44,7 +45,7 @@ pipeline {
                 echo 'Executing SonarQube analysis'
             }
         }      
-      
+*/      
  
       
       
