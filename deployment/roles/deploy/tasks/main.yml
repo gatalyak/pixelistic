@@ -21,7 +21,7 @@
     src: ./../pixelistic_be.tgz
     dest: /opt/app/
 - name: untar
-  command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
+  command: tar -C /opt/app/pixelistic_be -xvzf /opt/app/pixelistic_be.tgz
 - name: Running backend
   shell: "cd /opt/app && nohup node ./bin/www &"
   environment:
