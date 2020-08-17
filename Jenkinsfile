@@ -6,7 +6,7 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         MONGO_DB = credentials('MONGO_DB')
         EMAIL_USER = credentials('EMAIL_USER')
-        FRONT_URL = ${env.FRONT_URL}      
+        FRONT_URL = "${env.FRONT_URL}"      
   }  
   stages {
         
