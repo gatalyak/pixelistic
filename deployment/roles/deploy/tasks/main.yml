@@ -22,6 +22,9 @@
     dest: /opt/app/
 - name: untar
   command: tar -C /opt/app/pixelistic_be -xvzf /opt/app/pixelistic_be.tgz
+- name: Wait until the file pixelistic_be.tgz is present before continuing
+  wait_for:
+    path: /opt/app/pixelistic_be.tgz
 - name: Running backend
   shell: "cd /opt/app && nohup node ./bin/www &"
   environment:
