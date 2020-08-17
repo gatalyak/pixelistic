@@ -8,7 +8,15 @@ pipeline {
         git 'https://github.com/gatalyak/pixelistic.git'
       }
     }
-     
+
+    stages {
+        stage('Example') {
+            steps {
+                echo "Running ${env.API_WEB} on ${env.FRONT_URL}"
+            }
+        }
+    }      
+      
     stage('Build backend') {
       steps {
         dir('pixelistic_be'){
