@@ -22,6 +22,16 @@
     dest: /opt/app/
 - name: untar
   command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
+- name: Running backend
+  shell: "cd /opt/app && node ./bin/www"
+    environment:
+      FRONT_URL: {{ FRONT_URL }}
+      AWS_ACCESS_KEY_ID: {{ AWS_ACCESS_KEY_ID }} 
+      AWS_SECRET_ACCESS_KEY: {{ AWS_SECRET_ACCESS_KEY }}
+      MONGO_DB: {{ MONGO_DB }}
+      EMAIL_USER: {{ EMAIL_USER }}
+      EMAIL_PASS: {{ EMAIL_PASS }}
+      
 
    
 
