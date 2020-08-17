@@ -12,12 +12,17 @@
   file: path=/opt/app state=directory
 - name: Copy app files with owner and permissions
   copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    mode: "{{item.mode}}"
-  with_items:
-      - { src: './../pixelistic_fe/build',dest: '/opt/app/pixelistic_fe', mode: '0774'}
-      - { src: './../pixelistic_be',dest: '/opt/app', mode: '0774'}
+    src: ./../pixelistic_fe/build
+    dest: /opt/app/pixelistic_fe
+- name: tar
+  local_action: command tar zcvf ./../pixelistic_be.tgz ./../pixelistic_be
+- name: Copy app files with owner and permissions
+  copy:
+    src: ./../pixelistic_be.tgz
+    dest: /opt/app/
+- name: untar
+  command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
+
    
 
 
