@@ -52,7 +52,7 @@ pipeline {
             steps {
                 dir('deployment'){
                     echo 'Deploying'
-                    sh 'ansible-playbook -i dev-servers site.yml -u root --extra-vars "EMAIL_PASS=${EMAIL_USER_PSW} EMAIL_USER=${EMAIL_USER_USR} FRONT_URL=${FRONT_URL} MONGO_DB=${MONGO_DB} AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} "' 
+                    sh 'ansible-playbook -i dev-servers site.yml -u root --extra-vars \\"EMAIL_PASS=${EMAIL_USER_PSW} EMAIL_USER=${EMAIL_USER_USR} FRONT_URL=${FRONT_URL} MONGO_DB=${MONGO_DB} AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} \\"' 
 '
                 }
             }
