@@ -7,6 +7,3 @@
     - { role: mongodb_config, config_port: 27017 }
     - { role: geerlingguy.nodejs, nodejs_version: "10.x" }
     - deploy
-
-  vars:
-    - skeleton_port: 80
