@@ -4,10 +4,6 @@
     immediate: yes
     permanent: true
     state: enabled
-    port: "3000/tcp"
-    immediate: yes
-    permanent: true
-    state: enabled
 - name: Recursively remove app directory
   file:
     path: /opt/app
