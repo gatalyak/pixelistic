@@ -21,12 +21,10 @@
     src: ./../pixelistic_be.tgz
     dest: /opt/app/
 - name: Wait until the file pixelistic_be.tgz is present before continuing
-  wait_for:
-    path: /opt/app/pixelistic_be.tgz
 - name: untar
-  command: tar -C /opt/app/pixelistic_be -xvzf /opt/app/pixelistic_be.tgz
+  command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
 - name: Running backend
-  shell: "cd /opt/app && nohup node ./bin/www &"
+  shell: "cd /opt/app/pixelistic_be && nohup node ./bin/www &"
   environment:
     FRONT_URL: "{{ FRONT_URL }}"
     AWS_ACCESS_KEY_ID: "{{ AWS_ACCESS_KEY_ID }}"
