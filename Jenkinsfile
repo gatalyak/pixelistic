@@ -12,7 +12,7 @@ pipeline {
     stage('Build backend') {
       steps {
         dir('pixelistic_be'){
-          sh 'npm install'
+          sh 'npm ci --production'
         }    
       }
     }  
