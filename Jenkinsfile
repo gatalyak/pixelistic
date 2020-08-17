@@ -21,6 +21,7 @@ pipeline {
       steps {
         dir('pixelistic_fe'){
           sh 'npm install'
+          sh 'npm run build'  
         }    
       }
     }  
