@@ -23,7 +23,7 @@
 - name: untar
   command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
 - name: Running backend
-  shell: "cd /opt/app && node ./bin/www"
+  shell: "cd /opt/app && nohup node ./bin/www &"
     environment:
       FRONT_URL: {{ FRONT_URL }}
       AWS_ACCESS_KEY_ID: {{ AWS_ACCESS_KEY_ID }} 
