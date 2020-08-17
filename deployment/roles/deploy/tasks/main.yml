@@ -20,7 +20,6 @@
   copy:
     src: ./../pixelistic_be.tgz
     dest: /opt/app/
-- name: Wait until the file pixelistic_be.tgz is present before continuing
 - name: untar
   command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
 - name: Running backend
