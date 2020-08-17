@@ -39,6 +39,15 @@ pipeline {
             }
         }      
 
+        stage('SonarQube analysis'){
+            steps {
+                echo 'Executing SonarQube analysis'
+            }
+        }      
+      
+ 
+      
+      
         stage('Deploy'){
             steps {
                 dir('deployment'){
