@@ -15,7 +15,7 @@
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     mode: "{{item.mode}}"
-    with_items:
+  with_items:
       - { src: './../pixelistic_fe/build',dest: '/opt/app/pixelistic_fe', mode: '0774'}
       - { src: './../pixelistic_be',dest: '/opt/app', mode: '0774'}
    
