@@ -16,7 +16,7 @@
   file: path=/opt/app state=directory
 - name: Copy app files with owner and permissions
   copy:
-    src: .
+    src: ./..
     dest: /opt/app
     mode: '0644'
 
