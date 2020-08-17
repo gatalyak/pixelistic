@@ -12,7 +12,7 @@
   file: path=/opt/app state=directory
 - name: Copy app files with owner and permissions
   copy:
-    src: ./..
-    dest: /opt/app
+    src: ./../pixelistic_fe/build
+    dest: /opt/app/pixelistic_fe
     mode: '0644'
 
