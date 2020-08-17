@@ -9,13 +9,11 @@ pipeline {
       }
     }
 
-    stages {
         stage('Example') {
             steps {
                 echo "Running ${env.API_WEB} on ${env.FRONT_URL}"
             }
-        }
-    }      
+        }     
       
     stage('Build backend') {
       steps {
