@@ -23,7 +23,14 @@
 - name: untar
   command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
 - name: Running backend
-  shell: "cd /opt/app/pixelistic_be && nohup node ./bin/www &"
+  debug:
+        msg: "{{ FRONT_URL }}"
+        msg: "{{ AWS_ACCESS_KEY_ID }}"
+        msg: "{{ AWS_SECRET_ACCESS_KEY }}"
+        msg: "{{ MONGO_DB }}"
+        msg: "{{ EMAIL_USER }}"
+        msg: "{{ EMAIL_PASS }}"
+#  shell: "cd /opt/app/pixelistic_be && nohup node ./bin/www &"
   environment:
     FRONT_URL: "{{ FRONT_URL }}"
     AWS_ACCESS_KEY_ID: "{{ AWS_ACCESS_KEY_ID }}"
