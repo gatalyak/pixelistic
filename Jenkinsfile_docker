@@ -19,7 +19,8 @@ pipeline {
     stage('Build backend') {
       steps {
         dir('pixelistic_be'){
-          sh "docker build ./pixelistic_be/ -t gatalyak/api:${BUILD_NUMBER}"'
+          sh 'docker build ./pixelistic_be/ -t gatalyak/api:${BUILD_NUMBER}'
         }    
       }
     } 
+}    
