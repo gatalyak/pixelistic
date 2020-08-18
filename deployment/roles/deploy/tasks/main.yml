@@ -23,7 +23,7 @@
 - name: untar
   command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
 - name: Running backend
-  debug:
+#  debug:
 #  msg: "{{ MONGO_DB }}"
   shell: "cd /opt/app/pixelistic_be && nohup node ./bin/www &"
   environment:
