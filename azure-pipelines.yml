@@ -41,7 +41,7 @@ variables:
 
 stages:
 - stage: Build_fe
-  displayName: Build stage
+  displayName: Build stage frontend
   jobs:  
   - job: Build
     displayName: Build
@@ -69,11 +69,15 @@ stages:
     - upload: pixelistic_fe/manifests
       artifact: pixelistic_fe/manifests
 
+- stage: Test_fe
+  displayName: Test stage frontend
+  dependsOn: Build_fe
+
 - stage: Deploy_fe
-  displayName: Deploy stage
+  displayName: Deploy stage frontend
   dependsOn: 
-    - Build_fe
-    - Build_be
+    - Test_fe
+    - Test_be
   jobs:
   - deployment: Deploy
     condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/')))
@@ -173,7 +177,7 @@ stages:
 
 - stage: Build_be
   dependsOn: []
-  displayName: Build stage
+  displayName: Build stage backend
   jobs:  
   - job: Build
     displayName: Build
@@ -193,11 +197,16 @@ stages:
     - upload: pixelistic_be/manifests
       artifact: pixelistic_be/manifests
 
+- stage: Test_be
+  displayName: Test stage backend
+  dependsOn: Build_be
+
+
 - stage: Deploy_be
-  displayName: Deploy stage
+  displayName: Deploy stage backend
   dependsOn:
-    - Build_be
-    - Build_fe
+    - Test_be
+    - Test_fe
 
   jobs:
   - deployment: Deploy
