@@ -72,6 +72,10 @@ stages:
 - stage: Test_fe
   displayName: Test stage frontend
   dependsOn: Build_fe
+  jobs:
+  - job: Test_fe
+    steps:
+    - bash: echo "Test stage frontend"
 
 - stage: Deploy_fe
   displayName: Deploy stage frontend
@@ -200,6 +204,10 @@ stages:
 - stage: Test_be
   displayName: Test stage backend
   dependsOn: Build_be
+  jobs:
+  - job: Test_be
+    steps:
+    - bash: echo "Test stage backend"
 
 
 - stage: Deploy_be
