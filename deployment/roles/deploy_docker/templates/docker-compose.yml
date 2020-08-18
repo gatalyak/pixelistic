@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+    web:
+        image: gatalyak/web:{{ BUILD_NUMBER }}
+        init: true
+        environment:
+            - NODE_ENV=development
+        ports:
+            - "80:80"
+        restart: always    
+        depends_on:
+            - api
+        networks:
+            - frontend
+    api:
+        image: gatalyak/api:{{ BUILD_NUMBER }}
+        init: true
+        environment:
+          - AWS_S3_BUCKET={{ AWS_S3_BUCKET }}
+          - AWS_ACCESS_KEY_ID={{ AWS_ACCESS_KEY_ID }}
+          - AWS_SECRET_ACCESS_KEY={ {AWS_SECRET_ACCESS_KEY }}
+          - AWS_REGION={{ AWS_REGION }}
+          - MONGO_DB={{ MONGO_DB }}
+          - EMAIL_USER={{ EMAIL_USER }}
+          - EMAIL_PASS={{ EMAIL_PASS }}
+          - FRONT_URL={{ FRONT_URL }}
+        ports:
+            - "3000:3000"
+        restart: always
+        depends_on:
+            - mongo_db
+        entrypoint: ["./wait-for-it.sh", "mongo_db:27017","-t", "15", "--","node", "./bin/www"]
+        networks:
+            - frontend
+            - backend
+    mongo_db:
+        image: mongo:4
+        init: true
+        ports:
+            - "27017:27017"
+        restart: always    
+        volumes:
+            - ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh
+            - mongo-data:/data/db:cached
+        environment:
+            - MONGO_INITDB_DATABASE={{ DB_NAME }}
+            - MONGO_INITDB_ROOT_USERNAME=root
+            - MONGO_INITDB_ROOT_PASSWORD={{ DB_PASSWORD }}
+            - DB_NAME={{ DB_NAME }}
+            - DB_USER={{ DB_USER }}
+            - DB_PASSWORD={{ DB_PASSWORD }}
+        networks:
+            - frontend
+            - backend
+networks:
+    frontend:
+    backend:
+volumes:
+    mongo-data:
