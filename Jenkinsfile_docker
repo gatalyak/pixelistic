@@ -54,7 +54,7 @@ stage('Build frontend') {
             steps {
                 dir('deployment'){
                     echo 'Deploying'
-                    sh 'ansible-playbook -i dev-servers site-docker.yml -u root -e DOCKER_PASS=${DOCKER_USER_PSW} -e DOCKER_USER=${DOCKER_USER_USR} -e EMAIL_PASS=${EMAIL_USER_PSW} -e EMAIL_USER=${EMAIL_USER_USR} -e FRONT_URL=${FRONT_URL} -e MONGO_DB=${MONGO_DB} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' 
+                    sh 'ansible-playbook -i dev-servers site-docker.yml -u root -e BUILD_NUMBER=${BUILD_NUMBER} -e DOCKER_PASS=${DOCKER_USER_PSW} -e DOCKER_USER=${DOCKER_USER_USR} -e EMAIL_PASS=${EMAIL_USER_PSW} -e EMAIL_USER=${EMAIL_USER_USR} -e FRONT_URL=${FRONT_URL} -e MONGO_DB=${MONGO_DB} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' 
                 }
             }
         }      
