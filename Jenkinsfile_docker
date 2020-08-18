@@ -6,7 +6,8 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         MONGO_DB = credentials('MONGO_DB')
         EMAIL_USER = credentials('EMAIL_USER')
-        FRONT_URL = "${env.FRONT_URL}"      
+        FRONT_URL = "${env.FRONT_URL}"
+        DOCKER_USER = credentials('dockerhubyg')
   }  
   stages {
         
@@ -47,6 +48,17 @@ stage('Build frontend') {
                 sh "docker push gatalyak/web:${BUILD_NUMBER}"
             }
         }
+
+
+        stage('Deploy'){
+            steps {
+                dir('deployment'){
+                    echo 'Deploying'
+                    sh 'ansible-playbook -i dev-servers site-docker.yml -u root -e DOCKER_PASS=${DOCKER_USER_PSW} -e DOCKER_USER=${DOCKER_USER_USR} -e EMAIL_PASS=${EMAIL_USER_PSW} -e EMAIL_USER=${EMAIL_USER_USR} -e FRONT_URL=${FRONT_URL} -e MONGO_DB=${MONGO_DB} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' 
+                }
+            }
+        }      
+ 
 
 
 
