@@ -24,5 +24,34 @@ pipeline {
         }    
       }
     } 
- }
+
+stage('Build frontend') {
+      steps {  
+        dir('pixelistic_fe'){
+          sh 'docker build . -t gatalyak/web:${BUILD_NUMBER}'
+        }    
+      }
+    }  
+
+        stage('Tests'){
+            steps {
+                echo 'Executing tests'
+            }
+        }   
+        stage('Push Docker images to Docker Hub'){
+            steps{
+                withCredentials([usernamePassword(credentialsId: 'dockerhubyg', passwordVariable: 'pass', usernameVariable: 'user')]) {
+                    sh "echo '${pass}' > pass.txt"
+                    sh "docker login --username ${pass} --password-stdin < ./pass.txt"
+                    sh "rm pass.txt"
+                }
+                sh "docker push gatalyak/api:${BUILD_NUMBER}"
+                sh "docker push gatalyak/web:${BUILD_NUMBER}}"
+            }
+        }
+
+
+
+
+}
 }    
