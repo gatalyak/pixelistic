@@ -20,4 +20,4 @@
 - name: Replace nginx.conf
   template:
     src=templates/nginx.conf
-    dest=/etc/nginx/conf.d/default.conf
+    dest=/etc/nginx/nginx.conf
