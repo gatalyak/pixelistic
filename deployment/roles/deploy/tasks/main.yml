@@ -44,7 +44,10 @@
 - name: Stop app process
   shell: pkill -9 node
   ignore_errors: True
-  
+
+- name: nginx restarted
+  command: service nginx restart
+
 - name: Start application
   command: forever start /opt/app/pixelistic_be/bin/www
   environment:
