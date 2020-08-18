@@ -18,5 +18,12 @@
   template:
     src=templates/docker-compose.yml
     dest=/opt/app/deploy/docker-compose.yml
+
+- name: Create start_docker.sh
+  template:
+    src=templates/start_docker.sh
+    dest=/opt/app/start_docker.sh
+    mode: 0755
+    
     
   
