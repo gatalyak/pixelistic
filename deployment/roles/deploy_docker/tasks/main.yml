@@ -1,0 +1,15 @@
+- name: Open firewall ports for frontend
+  firewalld:
+    port: "80/tcp"
+    immediate: yes
+    permanent: true
+    state: enabled
+  ignore_errors: True  
+
+- name: Open firewall ports for backend
+  firewalld:
+    port: "3000/tcp"
+    immediate: yes
+    permanent: true
+    state: enabled
+  ignore_errors: True
