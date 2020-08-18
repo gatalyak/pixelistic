@@ -6,8 +6,18 @@ pipeline {
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
         MONGO_DB = credentials('MONGO_DB')
         EMAIL_USER = credentials('EMAIL_USER')
-        FRONT_URL = "${env.FRONT_URL}"
+        FRONT_URL = "${env.FRONT_URL2}"
+        API_WEB = "${env.REACT_APP_API_WEB}"
+        AWS_S3 =  "${env.REACT_APP_AWS_S3}"
         DOCKER_USER = credentials('dockerhubyg')
+
+        AWS_S3_BUCKET=credentials('AWS_S3_BUCKET')
+        AWS_REGION=credentials('AWS_REGION')
+        DB_NAME=credentials('DB_NAME')
+        DB_PASSWORD=credentials('DB_PASSWORD ')
+        DB_USER =credentials('DB_USER')
+        
+        
   }  
   stages {
         
@@ -29,7 +39,7 @@ pipeline {
 stage('Build frontend') {
       steps {  
         dir('pixelistic_fe'){
-          sh 'docker build --build-arg ${REACT_APP_API_WEB} --build-arg ${REACT_APP_AWS_S3} . -t gatalyak/web:${BUILD_NUMBER}'
+          sh 'docker build --build-arg ${API_WEB} --build-arg ${AWS_S3} . -t gatalyak/web:${BUILD_NUMBER}'
         }    
       }
     }  
@@ -54,7 +64,7 @@ stage('Build frontend') {
             steps {
                 dir('deployment'){
                     echo 'Deploying'
-                    sh 'ansible-playbook -i dev-servers site-docker.yml -u root -e BUILD_NUMBER=${BUILD_NUMBER} -e DOCKER_PASS=${DOCKER_USER_PSW} -e DOCKER_USER=${DOCKER_USER_USR} -e EMAIL_PASS=${EMAIL_USER_PSW} -e EMAIL_USER=${EMAIL_USER_USR} -e FRONT_URL=${FRONT_URL} -e MONGO_DB=${MONGO_DB} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' 
+                    sh 'ansible-playbook -i dev-servers site-docker.yml -u root -e DB_USER -e DB_PASSWORD=${DB_PASSWORD} -e DB_NAME=${DB_NAME} -e AWS_REGION=${AWS_REGION} -e AWS_S3_BUCKET=${AWS_S3_BUCKET} -e BUILD_NUMBER=${BUILD_NUMBER} -e DOCKER_PASS=${DOCKER_USER_PSW} -e DOCKER_USER=${DOCKER_USER_USR} -e EMAIL_PASS=${EMAIL_USER_PSW} -e EMAIL_USER=${EMAIL_USER_USR} -e FRONT_URL=${FRONT_URL} -e MONGO_DB=${MONGO_DB} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' 
                 }
             }
         }      
