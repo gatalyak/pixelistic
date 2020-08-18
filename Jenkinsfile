@@ -4,7 +4,7 @@ pipeline {
   environment {
         AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
         AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
-        MONGO_DB = credentials('MONGO_DB')
+        MONGO_DB = 'mongodb://admin:PassMongo@pixelistic.southcentralus.cloudapp.azure.com:27017/pixelapp'
         EMAIL_USER = credentials('EMAIL_USER')
         FRONT_URL = "${env.FRONT_URL}"      
   }  
