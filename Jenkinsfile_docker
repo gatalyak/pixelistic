@@ -39,7 +39,7 @@ pipeline {
 stage('Build frontend') {
       steps {  
         dir('pixelistic_fe'){
-          sh 'docker build --build-arg ${API_WEB} --build-arg ${AWS_S3} . -t gatalyak/web:${BUILD_NUMBER}'
+          sh 'docker build --build-arg REACT_APP_API_WEB=${API_WEB} --build-arg REACT_APP_AWS_S3=${AWS_S3} . -t gatalyak/web:${BUILD_NUMBER}'
         }    
       }
     }  
