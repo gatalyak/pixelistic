@@ -26,7 +26,7 @@
   template:
     src=templates/start_docker.yml
     dest=/opt/app/start_docker.sh
-    mode: 0755
+    mode=0755
     
     
   
