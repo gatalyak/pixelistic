@@ -44,7 +44,7 @@ stage('Build frontend') {
                     sh "docker login -u ${user} -p ${pass}"
                 }
                 sh "docker push gatalyak/api:${BUILD_NUMBER}"
-                sh "docker push gatalyak/web:${BUILD_NUMBER}}"
+                sh "docker push gatalyak/web:${BUILD_NUMBER}"
             }
         }
 
