@@ -41,9 +41,7 @@ stage('Build frontend') {
         stage('Push Docker images to Docker Hub'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerhubyg', passwordVariable: 'pass', usernameVariable: 'user')]) {
-                    sh "echo '${pass}' > pass.txt"
-                    sh "docker login --username ${user} --password-stdin < ./pass.txt"
-                    sh "rm pass.txt"
+                    sh "docker login -u ${user} -p ${pass}"
                 }
                 sh "docker push gatalyak/api:${BUILD_NUMBER}"
                 sh "docker push gatalyak/web:${BUILD_NUMBER}}"
