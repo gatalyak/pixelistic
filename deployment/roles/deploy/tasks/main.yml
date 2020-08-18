@@ -44,7 +44,7 @@
 - name: Stop app process
   shell: pkill -9 node
   
-  - name: Start application
+- name: Start application
   command: forever start /opt/app/pixelistic_be/bin/www
   environment:
     NODE_ENV: production  # Use this if you want to deploy the app in production
