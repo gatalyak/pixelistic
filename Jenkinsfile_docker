@@ -12,7 +12,12 @@ pipeline {
         
     stage('Git') {
       steps {
-        git 'https://github.com/gatalyak/pixelistic.git'
+    git(
+       url: 'https://github.com/gatalyak/pixelistic.git',
+       credentialsId: 'GithubYG',
+       branch: "${branch}"
+    )
+
       }
     }    
       
