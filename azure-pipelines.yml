@@ -71,8 +71,9 @@ stages:
 
 - stage: Deploy_fe
   displayName: Deploy stage
-  dependsOn: Build_fe
-
+  dependsOn: 
+    - Build_fe
+    - Build_be
   jobs:
   - deployment: Deploy
     condition: and(succeeded(), not(startsWith(variables['Build.SourceBranch'], 'refs/pull/')))
@@ -194,7 +195,9 @@ stages:
 
 - stage: Deploy_be
   displayName: Deploy stage
-  dependsOn: Build_be
+  dependsOn:
+    - Build_be
+    - Build_fe
 
   jobs:
   - deployment: Deploy
