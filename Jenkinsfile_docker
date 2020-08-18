@@ -1,0 +1,25 @@
+pipeline {
+    agent { label 'master' }  
+
+  environment {
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        MONGO_DB = credentials('MONGO_DB')
+        EMAIL_USER = credentials('EMAIL_USER')
+        FRONT_URL = "${env.FRONT_URL}"      
+  }  
+  stages {
+        
+    stage('Git') {
+      steps {
+        git 'https://github.com/gatalyak/pixelistic.git'
+      }
+    }    
+      
+    stage('Build backend') {
+      steps {
+        dir('pixelistic_be'){
+          sh "docker build ./pixelistic_be/ -t gatalyak/api:${BUILD_NUMBER}"'
+        }    
+      }
+    } 
