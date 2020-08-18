@@ -49,7 +49,7 @@ stage('Build frontend') {
                 echo 'Executing tests'
             }
         }   
-        stage('Push Docker images to Docker Hub'){
+        stage('Push Docker images'){
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerhubyg', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     sh "docker login -u ${user} -p ${pass}"
@@ -64,7 +64,7 @@ stage('Build frontend') {
             steps {
                 dir('deployment'){
                     echo 'Deploying'
-                    sh 'ansible-playbook -i dev-servers site-docker.yml -u root -e DB_USER -e DB_PASSWORD=${DB_PASSWORD} -e DB_NAME=${DB_NAME} -e AWS_REGION=${AWS_REGION} -e AWS_S3_BUCKET=${AWS_S3_BUCKET} -e BUILD_NUMBER=${BUILD_NUMBER} -e DOCKER_PASS=${DOCKER_USER_PSW} -e DOCKER_USER=${DOCKER_USER_USR} -e EMAIL_PASS=${EMAIL_USER_PSW} -e EMAIL_USER=${EMAIL_USER_USR} -e FRONT_URL=${FRONT_URL} -e MONGO_DB=${MONGO_DB} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' 
+                    sh 'ansible-playbook -i dev-servers site-docker.yml -u root -e DB_USER=${DB_USER} -e DB_PASSWORD=${DB_PASSWORD} -e DB_NAME=${DB_NAME} -e AWS_REGION=${AWS_REGION} -e AWS_S3_BUCKET=${AWS_S3_BUCKET} -e BUILD_NUMBER=${BUILD_NUMBER} -e DOCKER_PASS=${DOCKER_USER_PSW} -e DOCKER_USER=${DOCKER_USER_USR} -e EMAIL_PASS=${EMAIL_USER_PSW} -e EMAIL_USER=${EMAIL_USER_USR} -e FRONT_URL=${FRONT_URL} -e MONGO_DB=${MONGO_DB} -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' 
                 }
             }
         }      
