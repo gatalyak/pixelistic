@@ -42,7 +42,7 @@ stage('Build frontend') {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'dockerhubyg', passwordVariable: 'pass', usernameVariable: 'user')]) {
                     sh "echo '${pass}' > pass.txt"
-                    sh "docker login --username ${pass} --password-stdin < ./pass.txt"
+                    sh "docker login --username ${user} --password-stdin < ./pass.txt"
                     sh "rm pass.txt"
                 }
                 sh "docker push gatalyak/api:${BUILD_NUMBER}"
