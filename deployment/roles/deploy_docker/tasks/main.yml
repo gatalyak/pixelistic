@@ -14,6 +14,9 @@
     state: enabled
   ignore_errors: True
   
+- name: Create app directory
+  file: path=/opt/app/deploy state=directory
+
 - name: Create docker-compose.yml
   template:
     src=templates/docker-compose.yml
@@ -21,7 +24,7 @@
 
 - name: Create start_docker.sh
   template:
-    src=templates/start_docker.sh
+    src=templates/start_docker.yml
     dest=/opt/app/start_docker.sh
     mode: 0755
     
