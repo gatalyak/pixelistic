@@ -27,6 +27,8 @@
     src=templates/start_docker.yml
     dest=/opt/app/start_docker.sh
     mode=0755
-    
+
+- name: Start application
+  command: cd /opt/app && /opt/app/start_docker.sh    
     
   
