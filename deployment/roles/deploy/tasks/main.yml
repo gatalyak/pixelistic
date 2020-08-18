@@ -22,8 +22,8 @@
     dest: /opt/app/
 - name: untar
   command: tar -C /opt/app -xvzf /opt/app/pixelistic_be.tgz
-- name: Exit backend
-  shell: "kill $(ps aux | grep '[n]ode' | awk '{print $2}')"
+#- name: Exit backend
+#  shell: "kill $(ps aux | grep '[n]ode' | awk '{print $2}')"
 
 - name: Running backend
 #  debug:
