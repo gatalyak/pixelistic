@@ -44,7 +44,7 @@ export class SignIn extends React.Component {
         <div className="sign-in">
           <Grid className="signin-container" container justify={"center"}>
             <Grid item xs={8} container alignItems={"center"} justify={"flex-start"} direction={"column"}>
-              <h1>Pixel SoftServe Demo</h1>
+              <h1>Pixel</h1>
 
               <form onSubmit={this.handleSubmit} className="form">
                 <InputEmail 
