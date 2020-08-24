@@ -1,0 +1,3 @@
+pixelistic-fe:
+  build: pixelistic-fe/Dockerfile
+  image: gatalyak/pixelistic-fe
