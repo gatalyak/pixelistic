@@ -2,6 +2,10 @@ variable "environment" {
   description = "The environment"
 }
 
+variable "tag_value" {
+  description = "The tag for ita"
+}
+
 variable "subnet_ids" {
   type        = "list"
   description = "Subnet ids"

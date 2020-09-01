@@ -5,6 +5,11 @@ variable "region" {
 /*====
 environment specific variables
 ======*/
+variable "tag_value" {
+  description = "The tag for ita"
+}
+
+
 
 variable "database_name" {
   description = "The database name for Production"

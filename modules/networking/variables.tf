@@ -1,3 +1,7 @@
+variable "tag_value" {
+  description = "The tag for ita"
+}
+
 variable "vpc_cidr" {
   description = "The CIDR block of the vpc"
 }
