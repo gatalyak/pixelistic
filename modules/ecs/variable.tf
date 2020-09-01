@@ -2,6 +2,10 @@ variable "environment" {
   description = "The environment"
 }
 
+variable "tag_value" {
+  description = "The tag for ita"
+}
+
 variable "vpc_id" {
   description = "The VPC id"
 }
