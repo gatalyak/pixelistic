@@ -3,13 +3,26 @@ version: 0.2
 phases:
   install:
     commands:
-      - curl -fsSL https://apt.releases.hashicorp.com/gpg |  apt-key add -
-      - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-      - apt-get update && apt-get install terraform
+      #- curl -fsSL https://apt.releases.hashicorp.com/gpg |  apt-key add -
+      #- apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      #- apt-get update && apt-get install terraform
   pre_build:
     commands:
-      - terraform init
+      #- terraform init
+      - pip install awscli --upgrade --user
+      - echo `aws --version`
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --region ${region} --no-include-email)
+      - REPOSITORY_URI=${repository_url}
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo Entered the pre_build phase...
 
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -f pixelistic-fe/Dockerfile --build-arg build_without="development test" --build-arg pixelistic_env="production" -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
 
 #  pre_build:
 #    commands:

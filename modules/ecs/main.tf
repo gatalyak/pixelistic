@@ -20,13 +20,15 @@ resource "aws_ecr_repository" "pixelistic_terraform_app" {
     ita_group = "${var.tag_value}"
   }
 
-
-
 }
+
+
 
 /*====
 ECS cluster
 ======*/
+
+/*
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.environment}-ecs-cluster"
 }
@@ -36,6 +38,8 @@ ECS task definitions
 ======*/
 
 /* the task definition for the web service */
+/*
+
 data "template_file" "web_task" {
   template = "${file("${path.module}/tasks/web_task_definition.json")}"
 
@@ -59,6 +63,7 @@ resource "aws_ecs_task_definition" "web" {
 }
 
 /* the task definition for the db migration */
+/*
 data "template_file" "db_migrate_task" {
   template = "${file("${path.module}/tasks/db_migrate_task_definition.json")}"
 
@@ -84,6 +89,7 @@ resource "aws_ecs_task_definition" "db_migrate" {
 /*====
 App Load Balancer
 ======*/
+/*
 resource "random_id" "target_group_sufix" {
   byte_length = 2
 }
@@ -101,6 +107,7 @@ resource "aws_alb_target_group" "alb_target_group" {
 }
 
 /* security group for ALB */
+/*
 resource "aws_security_group" "web_inbound_sg" {
   name        = "${var.environment}-web-inbound-sg"
   description = "Allow HTTP from Anywhere into ALB"
@@ -158,6 +165,8 @@ resource "aws_alb_listener" "rails_terraform" {
 /*
 * IAM service role
 */
+/*
+
 data "aws_iam_policy_document" "ecs_service_role" {
   statement {
     effect = "Allow"
@@ -189,6 +198,8 @@ data "aws_iam_policy_document" "ecs_service_policy" {
 }
 
 /* ecs service scheduler role */
+/*
+
 resource "aws_iam_role_policy" "ecs_service_role_policy" {
   name   = "ecs_service_role_policy"
   #policy = "${file("${path.module}/policies/ecs-service-role.json")}"
@@ -197,6 +208,7 @@ resource "aws_iam_role_policy" "ecs_service_role_policy" {
 }
 
 /* role that the Amazon ECS container agent and the Docker daemon can assume */
+/*
 resource "aws_iam_role" "ecs_execution_role" {
   name               = "ecs_task_execution_role"
   assume_role_policy = "${file("${path.module}/policies/ecs-task-execution-role.json")}"
@@ -213,6 +225,7 @@ ECS service
 ======*/
 
 /* Security Group for ECS */
+/*
 resource "aws_security_group" "ecs_service" {
   vpc_id      = "${var.vpc_id}"
   name        = "${var.environment}-ecs-service-sg"
@@ -239,6 +252,7 @@ resource "aws_security_group" "ecs_service" {
 }
 
 /* Simply specify the family to find the latest ACTIVE revision in that family */
+/*
 data "aws_ecs_task_definition" "web" {
   task_definition = "${aws_ecs_task_definition.web.family}"
   depends_on = [ "aws_ecs_task_definition.web" ]
@@ -270,6 +284,7 @@ resource "aws_ecs_service" "web" {
 /*====
 Auto Scaling for ECS
 ======*/
+/*
 
 resource "aws_iam_role" "ecs_autoscale_role" {
   name               = "${var.environment}_ecs_autoscale_role"
@@ -331,7 +346,11 @@ resource "aws_appautoscaling_policy" "down" {
   depends_on = ["aws_appautoscaling_target.target"]
 }
 
+*/
+
 /* metric used for auto scale */
+
+/*
 resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   alarm_name          = "${var.environment}_rails_terraform_web_cpu_utilization_high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -350,3 +369,5 @@ resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
   alarm_actions = ["${aws_appautoscaling_policy.up.arn}"]
   ok_actions    = ["${aws_appautoscaling_policy.down.arn}"]
 }
+
+*/
