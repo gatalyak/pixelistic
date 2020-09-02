@@ -28,9 +28,12 @@ resource "aws_ecr_repository" "pixelistic_terraform_app" {
 ECS cluster
 ======*/
 
-/*
+
 resource "aws_ecs_cluster" "cluster" {
   name = "${var.environment}-ecs-cluster"
+  tags = {
+    ita_group = "${var.tag_value}"
+  }
 }
 
 /*====
@@ -38,15 +41,15 @@ ECS task definitions
 ======*/
 
 /* the task definition for the web service */
-/*
+
 
 data "template_file" "web_task" {
   template = "${file("${path.module}/tasks/web_task_definition.json")}"
 
   vars = {
     image           = "${aws_ecr_repository.pixelistic_terraform_app.repository_url}"
-    secret_key_base = "${var.secret_key_base}"
-    database_url    = "postgresql://${var.database_username}:${var.database_password}@${var.database_endpoint}:5432/${var.database_name}?encoding=utf8&pool=40"
+#    secret_key_base = "${var.secret_key_base}"
+#    database_url    = "postgresql://${var.database_username}:${var.database_password}@${var.database_endpoint}:5432/${var.database_name}?encoding=utf8&pool=40"
     log_group       = "${aws_cloudwatch_log_group.pixelistic_terraform.name}"
   }
 }
@@ -68,10 +71,10 @@ data "template_file" "db_migrate_task" {
   template = "${file("${path.module}/tasks/db_migrate_task_definition.json")}"
 
   vars = {
-    image           = "${aws_ecr_repository.rails_terraform_app.repository_url}"
+    image           = "${aws_ecr_repository.pixelistic_terraform_app.repository_url}"
     secret_key_base = "${var.secret_key_base}"
     database_url    = "postgresql://${var.database_username}:${var.database_password}@${var.database_endpoint}:5432/${var.database_name}?encoding=utf8&pool=40"
-    log_group       = "rails_terraform"
+    log_group       = "pixelistic_terraform"
   }
 }
 
@@ -85,11 +88,13 @@ resource "aws_ecs_task_definition" "db_migrate" {
   execution_role_arn       = "${aws_iam_role.ecs_execution_role.arn}"
   task_role_arn            = "${aws_iam_role.ecs_execution_role.arn}"
 }
+*/
+
 
 /*====
 App Load Balancer
 ======*/
-/*
+
 resource "random_id" "target_group_sufix" {
   byte_length = 2
 }
@@ -104,10 +109,15 @@ resource "aws_alb_target_group" "alb_target_group" {
   lifecycle {
     create_before_destroy = true
   }
+
+  tags = {
+    ita_group = "${var.tag_value}"
+  }
+
 }
 
 /* security group for ALB */
-/*
+
 resource "aws_security_group" "web_inbound_sg" {
   name        = "${var.environment}-web-inbound-sg"
   description = "Allow HTTP from Anywhere into ALB"
@@ -135,23 +145,25 @@ resource "aws_security_group" "web_inbound_sg" {
   }
 
   tags = {
+    ita_group = "${var.tag_value}"
     Name = "${var.environment}-web-inbound-sg"
   }
 }
 
-resource "aws_alb" "alb_rails-terraform" {
-  name            = "${var.environment}-alb-rails-terraform"
+resource "aws_alb" "alb_pixelistic-terraform" {
+  name            = "${var.environment}-alb-pixelistic-tf"
   subnets         = "${var.public_subnet_ids}"
   security_groups = "${concat(var.security_groups_ids, [aws_security_group.web_inbound_sg.id])}"
 
   tags = {
-    Name        = "${var.environment}-alb-rails_terraform"
+    ita_group = "${var.tag_value}"
+    Name        = "${var.environment}-alb-pixelistic_terraform"
     Environment = "${var.environment}"
   }
 }
 
-resource "aws_alb_listener" "rails_terraform" {
-  load_balancer_arn = "${aws_alb.alb_rails-terraform.arn}"
+resource "aws_alb_listener" "pixelistic_terraform" {
+  load_balancer_arn = "${aws_alb.alb_pixelistic-terraform.arn}"
   port              = "80"
   protocol          = "HTTP"
   depends_on        = ["aws_alb_target_group.alb_target_group"]
@@ -160,12 +172,14 @@ resource "aws_alb_listener" "rails_terraform" {
     target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
     type             = "forward"
   }
+
+
 }
 
 /*
 * IAM service role
 */
-/*
+
 
 data "aws_iam_policy_document" "ecs_service_role" {
   statement {
@@ -176,11 +190,17 @@ data "aws_iam_policy_document" "ecs_service_role" {
       identifiers = ["ecs.amazonaws.com"]
     }
   }
+
 }
 
 resource "aws_iam_role" "ecs_role" {
   name               = "ecs_role"
   assume_role_policy = "${data.aws_iam_policy_document.ecs_service_role.json}"
+
+  tags = {
+    ita_group = "${var.tag_value}"
+  }
+
 }
 
 data "aws_iam_policy_document" "ecs_service_policy" {
@@ -198,17 +218,18 @@ data "aws_iam_policy_document" "ecs_service_policy" {
 }
 
 /* ecs service scheduler role */
-/*
+
 
 resource "aws_iam_role_policy" "ecs_service_role_policy" {
   name   = "ecs_service_role_policy"
   #policy = "${file("${path.module}/policies/ecs-service-role.json")}"
   policy = "${data.aws_iam_policy_document.ecs_service_policy.json}"
   role   = "${aws_iam_role.ecs_role.id}"
+
 }
 
 /* role that the Amazon ECS container agent and the Docker daemon can assume */
-/*
+
 resource "aws_iam_role" "ecs_execution_role" {
   name               = "ecs_task_execution_role"
   assume_role_policy = "${file("${path.module}/policies/ecs-task-execution-role.json")}"
@@ -225,7 +246,7 @@ ECS service
 ======*/
 
 /* Security Group for ECS */
-/*
+
 resource "aws_security_group" "ecs_service" {
   vpc_id      = "${var.vpc_id}"
   name        = "${var.environment}-ecs-service-sg"
@@ -246,13 +267,14 @@ resource "aws_security_group" "ecs_service" {
   }
 
   tags = {
+    ita_group   = "${var.tag_value}"
     Name        = "${var.environment}-ecs-service-sg"
     Environment = "${var.environment}"
   }
 }
 
 /* Simply specify the family to find the latest ACTIVE revision in that family */
-/*
+
 data "aws_ecs_task_definition" "web" {
   task_definition = "${aws_ecs_task_definition.web.family}"
   depends_on = [ "aws_ecs_task_definition.web" ]
@@ -277,6 +299,9 @@ resource "aws_ecs_service" "web" {
     container_port   = "80"
   }
 
+  tags = {
+    ita_group = "${var.tag_value}"
+  }
   #depends_on = ["aws_alb_target_group.alb_target_group"]
 }
 
@@ -285,7 +310,7 @@ resource "aws_ecs_service" "web" {
 Auto Scaling for ECS
 ======*/
 /*
-
+/*
 resource "aws_iam_role" "ecs_autoscale_role" {
   name               = "${var.environment}_ecs_autoscale_role"
   assume_role_policy = "${file("${path.module}/policies/ecs-autoscale-role.json")}"
@@ -352,7 +377,7 @@ resource "aws_appautoscaling_policy" "down" {
 
 /*
 resource "aws_cloudwatch_metric_alarm" "service_cpu_high" {
-  alarm_name          = "${var.environment}_rails_terraform_web_cpu_utilization_high"
+  alarm_name          = "${var.environment}_pixelistic_terraform_web_cpu_utilization_high"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = "2"
   metric_name         = "CPUUtilization"

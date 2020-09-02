@@ -1,11 +1,11 @@
 [
     {
-      "name": "web",
+      "name": "api",
       "image": "${image}",
       "portMappings": [
         {
-          "containerPort": 80,
-          "hostPort": 80
+          "containerPort": 3000,
+          "hostPort": 3000
         }
       ],
       "memory": 300,
@@ -15,13 +15,13 @@
         "options": {
           "awslogs-group": "${log_group}",
           "awslogs-region": "eu-central-1",
-          "awslogs-stream-prefix": "web"
+          "awslogs-stream-prefix": "api"
         }
       },
       "environment": [
         {
-          "name": "PIXELISTIC_ENV",
-          "value": "production"
+          "name": "MONGO_DB",
+          "value": "${MONGO_DB}"
         }
       ]
     }
