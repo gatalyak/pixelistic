@@ -5,7 +5,7 @@ resource "aws_cloudwatch_log_group" "pixelistic_terraform" {
   name = "pixelistic_terraform"
 
   tags = {
-    ita_group = "${var.tag_value}"
+    ita_group = var.tag_value
     Environment = "${var.environment}"
     Application = "pixelistic_terraform"
   }
@@ -100,7 +100,7 @@ resource "random_id" "target_group_sufix" {
 }
 
 resource "aws_alb_target_group" "alb_target_group" {
-  name     = "${var.environment}-alb-target-group-${random_id.target_group_sufix.hex}"
+  name     = "${var.environment}-alb-tg-${random_id.target_group_sufix.hex}"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -113,7 +113,7 @@ resource "aws_alb_target_group" "alb_target_group" {
   tags = {
     ita_group = "${var.tag_value}"
   }
-
+depends_on = [ "aws_alb.alb_pixelistic-terraform" ]
 }
 
 /* security group for ALB */
@@ -299,9 +299,9 @@ resource "aws_ecs_service" "web" {
     container_port   = "80"
   }
 
-  tags = {
-    ita_group = "${var.tag_value}"
-  }
+#  tags = {
+#    ita_group = "${var.tag_value}"
+#  }
   #depends_on = ["aws_alb_target_group.alb_target_group"]
 }
 
