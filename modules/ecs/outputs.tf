@@ -22,3 +22,7 @@ output "alb_zone_id" {
 output "security_group_id" {
   value = "${aws_security_group.ecs_service.id}"
 }
+
+output "rep_web_url" {
+  value = "${aws_ecr_repository.pixelistic_terraform_web.repository_url}"
+}

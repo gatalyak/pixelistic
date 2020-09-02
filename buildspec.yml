@@ -17,7 +17,8 @@ phases:
       - echo `aws --version`
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --region eu-central-1 --no-include-email)
-      - REP_WEB_URI=536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_tf/web
+      - REP_WEB_URI=$(terraform output rep_web_url)
+      - echo REP_WEB_URI
       - REP_API_URI=536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_tf/api
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo Entered the pre_build phase...
@@ -43,6 +44,6 @@ phases:
       - docker push $REP_API_URI:$IMAGE_TAG
       - echo Writing image definitions file...
       - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG > imagedefinitions.json
-      
+
 artifacts:
   files: imagedefinitions.json
