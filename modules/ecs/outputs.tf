@@ -1,8 +1,8 @@
 output "repository_url" {
-  value = "${aws_ecr_repository.pixelistic_terraform_app.repository_url}"
+  value = "${aws_ecr_repository.pixelistic_terraform_web.repository_url}"
 }
 
-/*
+
 output "cluster_name" {
   value = "${aws_ecs_cluster.cluster.name}"
 }
@@ -16,10 +16,9 @@ output "alb_dns_name" {
 }
 
 output "alb_zone_id" {
-  value = "${aws_alb.alb_rails-terraform.zone_id}"
+  value = "${aws_alb.alb_pixelistic-terraform.zone_id}"
 }
 
 output "security_group_id" {
   value = "${aws_security_group.ecs_service.id}"
 }
-*/

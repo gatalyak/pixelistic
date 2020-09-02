@@ -6,6 +6,7 @@ phases:
       - curl -fsSL https://apt.releases.hashicorp.com/gpg |  apt-key add -
       - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
       - apt-get update && apt-get install terraform
+
   pre_build:
     commands:
       - terraform --version
@@ -16,44 +17,32 @@ phases:
       - echo `aws --version`
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --region eu-central-1 --no-include-email)
-      - REPOSITORY_URI=536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_terraform/production
+      - REP_WEB_URI=536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_tf/web
+      - REP_API_URI=536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_tf/api
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo Entered the pre_build phase...
-
+      
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...    
-      - docker build --build-arg pixelistic_env="production" -t $REPOSITORY_URI:latest pixelistic_fe
-      #- docker build -t $REPOSITORY_URI:latest pixelistic_be
-      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      - echo Building the Docker image frontend...    
+      - docker build --build-arg pixelistic_env="production" -t $REP_WEB_URI:latest pixelistic_fe
+      - docker tag $REP_WEB_URI:latest $REP_WEB_URI:$IMAGE_TAG
+      - echo Building the Docker image backend...    
+      - docker build -t $REP_API_URI:latest pixelistic_be
+      - docker tag $REP_API_URI:latest $REP_API_URI:$IMAGE_TAG
+
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Pushing the Docker images frontend...
+      - docker push $REP_WEB_URI:latest
+      - docker push $REP_WEB_URI:$IMAGE_TAG
+      - echo Pushing the Docker images backend...
+      - docker push $REP_API_URI:latest
+      - docker push $REP_API_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"web","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-#      - echo upgrading db-migrate task definitions
-      #- aws ecs run-task --launch-type FARGATE --cluster ${cluster_name} --task-definition production_db_migrate --network-configuration "awsvpcConfiguration={subnets=[${subnet_id}],securityGroups=[${security_group_ids}]}"
-
+      - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG > imagedefinitions.json
+      
 artifacts:
   files: imagedefinitions.json
-
-
-#  pre_build:
-#    commands:
-#      - echo Logging in to Amazon ECR...
-#      - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
-#  build:
-#    commands:
-#      - echo Build started on `date`
-#      - echo Building the Docker image...          
-#      - docker build -f pixelistic-fe/Dockerfile -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-#      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
-#  post_build:
-#    commands:
-#      - echo Build completed on `date`
-#      - echo Pushing the Docker image...
-#      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG

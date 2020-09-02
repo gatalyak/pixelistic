@@ -49,7 +49,8 @@ module "ecs" {
   environment        = var.environment
   vpc_id             = module.networking.vpc_id
   availability_zones = local.availability_zones
-  repository_name    = "pixelistic_terraform/production"
+  rep_name_web       = "pixelistic_tf/web"
+  rep_name_api       = "pixelistic_tf/api"
   subnets_ids        = module.networking.private_subnets_id
   public_subnet_ids  = module.networking.public_subnets_id
 #  security_groups_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)

@@ -14,13 +14,21 @@ resource "aws_cloudwatch_log_group" "pixelistic_terraform" {
 /*====
 ECR repository to store our Docker images
 ======*/
-resource "aws_ecr_repository" "pixelistic_terraform_app" {
-  name = "${var.repository_name}"
+resource "aws_ecr_repository" "pixelistic_terraform_web" {
+  name = "${var.rep_name_web}"
   tags = {
     ita_group = "${var.tag_value}"
   }
-
 }
+
+resource "aws_ecr_repository" "pixelistic_terraform_api" {
+  name = "${var.rep_name_api}"
+  tags = {
+    ita_group = "${var.tag_value}"
+  }
+}
+
+
 
 
 
@@ -47,7 +55,7 @@ data "template_file" "web_task" {
   template = "${file("${path.module}/tasks/web_task_definition.json")}"
 
   vars = {
-    image           = "${aws_ecr_repository.pixelistic_terraform_app.repository_url}"
+    image           = "${aws_ecr_repository.pixelistic_terraform_web.repository_url}"
 #    secret_key_base = "${var.secret_key_base}"
 #    database_url    = "postgresql://${var.database_username}:${var.database_password}@${var.database_endpoint}:5432/${var.database_name}?encoding=utf8&pool=40"
     log_group       = "${aws_cloudwatch_log_group.pixelistic_terraform.name}"

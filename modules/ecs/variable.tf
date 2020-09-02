@@ -46,8 +46,12 @@ variable "database_name" {
   description = "The database that the app will use"
 }
 
-variable "repository_name" {
-  description = "The name of the repisitory"
+variable "rep_name_web" {
+  description = "The name of the repisitory web"
+}
+
+variable "rep_name_api" {
+  description = "The name of the repisitory api"
 }
 
 variable "secret_key_base" {
