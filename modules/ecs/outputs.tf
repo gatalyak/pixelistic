@@ -26,3 +26,7 @@ output "security_group_id" {
 output "rep_web_url" {
   value = "${aws_ecr_repository.pixelistic_terraform_web.repository_url}"
 }
+
+output "rep_api_url" {
+  value = "${aws_ecr_repository.pixelistic_terraform_api.repository_url}"
+}
