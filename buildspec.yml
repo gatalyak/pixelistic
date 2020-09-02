@@ -22,8 +22,8 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...    
       - ls -l
-      - cd pixelistic_be
-      - docker build --build-arg --build-arg pixelistic_env="production" -t $REPOSITORY_URI:latest .
+      - cd pixelistic_fe
+      - docker build --build-arg pixelistic_env="production" -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
