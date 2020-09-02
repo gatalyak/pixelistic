@@ -15,9 +15,9 @@ variable "vpc_id" {
   description = "The VPC id"
 }
 
-//variable "allowed_security_group_id" {
-//  description = "The allowed security group id to connect on RDS"
-//}
+variable "allowed_security_group_id" {
+  description = "The allowed security group id to connect on DOCDB"
+}
 
 variable "allocated_storage" {
   default     = "20"
