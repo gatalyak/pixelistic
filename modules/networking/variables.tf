@@ -32,3 +32,4 @@ variable "availability_zones" {
 variable "key_name" {
   description = "The public key for the bastion host"
 }
+

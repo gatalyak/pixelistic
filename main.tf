@@ -29,7 +29,7 @@ module "networking" {
 }
 
 
-/*
+
 module "docdb" {
   source            = "./modules/docdb"
   environment       = var.environment
@@ -42,7 +42,6 @@ module "docdb" {
   tag_value         = var.tag_value
 }
 
-*/
 
 module "ecs" {
   source             = "./modules/ecs"
@@ -53,10 +52,17 @@ module "ecs" {
   rep_name_api       = "pixelistic_tf/api"
   subnets_ids        = module.networking.private_subnets_id
   public_subnet_ids  = module.networking.public_subnets_id
-#  security_groups_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)
-security_groups_ids = concat(module.networking.security_groups_ids)
-#  database_endpoint = module.rds.rds_address
-  database_endpoint = var.environment
+  security_groups_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)
+  MONGO_DB           = module.docdb.docdb_constring
+  FRONT_URL          = "FRONT_URL"
+  AWS_ACCESS_KEY_ID  = "AWS_ACCESS_KEY_ID"
+  AWS_SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY" 
+  AWS_REGION         = "AWS_REGION"
+  AWS_S3_BUCKET      = "AWS_S3_BUCKET"
+  EMAIL_USER         = "EMAIL_USER"
+  EMAIL_PASS         = "EMAIL_PASS"
+
+  database_endpoint = module.docdb.docdb_address
   database_name     = var.database_name
   database_username = var.database_username
   database_password = var.database_password

@@ -56,11 +56,29 @@ data "template_file" "web_task" {
 
   vars = {
     image           = "${aws_ecr_repository.pixelistic_terraform_web.repository_url}"
-#    secret_key_base = "${var.secret_key_base}"
-#    database_url    = "postgresql://${var.database_username}:${var.database_password}@${var.database_endpoint}:5432/${var.database_name}?encoding=utf8&pool=40"
     log_group       = "${aws_cloudwatch_log_group.pixelistic_terraform.name}"
   }
 }
+
+data "template_file" "api_task" {
+  template = "${file("${path.module}/tasks/api_task_definition.json")}"
+
+  vars = {
+    image           = "${aws_ecr_repository.pixelistic_terraform_api.repository_url}"
+    MONGO_DB        = "${var.MONGO_DB}"
+    FRONT_URL       = "${var.FRONT_URL}"
+    AWS_ACCESS_KEY_ID  = "${var.AWS_ACCESS_KEY_ID}"
+    AWS_SECRET_ACCESS_KEY = "${var.AWS_SECRET_ACCESS_KEY}"
+    AWS_REGION      = "${var.AWS_REGION}"
+    AWS_S3_BUCKET   = "${var.AWS_S3_BUCKET}"
+    EMAIL_USER      = "${var.EMAIL_USER}"
+    EMAIL_PASS      = "${var.EMAIL_PASS}"
+    log_group       = "${aws_cloudwatch_log_group.pixelistic_terraform.name}"
+  }
+}
+
+
+
 
 resource "aws_ecs_task_definition" "web" {
   family                   = "${var.environment}_web"
@@ -73,22 +91,10 @@ resource "aws_ecs_task_definition" "web" {
   task_role_arn            = "${aws_iam_role.ecs_execution_role.arn}"
 }
 
-/* the task definition for the db migration */
-/*
-data "template_file" "db_migrate_task" {
-  template = "${file("${path.module}/tasks/db_migrate_task_definition.json")}"
 
-  vars = {
-    image           = "${aws_ecr_repository.pixelistic_terraform_app.repository_url}"
-    secret_key_base = "${var.secret_key_base}"
-    database_url    = "postgresql://${var.database_username}:${var.database_password}@${var.database_endpoint}:5432/${var.database_name}?encoding=utf8&pool=40"
-    log_group       = "pixelistic_terraform"
-  }
-}
-
-resource "aws_ecs_task_definition" "db_migrate" {
-  family                   = "${var.environment}_db_migrate"
-  container_definitions    = "${data.template_file.db_migrate_task.rendered}"
+resource "aws_ecs_task_definition" "api" {
+  family                   = "${var.environment}_api"
+  container_definitions    = "${data.template_file.api_task.rendered}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = "256"
@@ -96,19 +102,18 @@ resource "aws_ecs_task_definition" "db_migrate" {
   execution_role_arn       = "${aws_iam_role.ecs_execution_role.arn}"
   task_role_arn            = "${aws_iam_role.ecs_execution_role.arn}"
 }
-*/
 
 
 /*====
-App Load Balancer
+Web Load Balancer
 ======*/
 
 resource "random_id" "target_group_sufix" {
   byte_length = 2
 }
 
-resource "aws_alb_target_group" "alb_target_group" {
-  name     = "${var.environment}-alb-tg-${random_id.target_group_sufix.hex}"
+resource "aws_alb_target_group" "alb_target_group_web" {
+  name     = "${var.environment}-alb-tg-web-${random_id.target_group_sufix.hex}"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -121,10 +126,34 @@ resource "aws_alb_target_group" "alb_target_group" {
   tags = {
     ita_group = "${var.tag_value}"
   }
-depends_on = [ "aws_alb.alb_pixelistic-terraform" ]
+depends_on = [ "aws_alb.alb_pixelistic_web" ]
 }
 
-/* security group for ALB */
+resource "aws_alb_target_group" "alb_target_group_api" {
+  name     = "${var.environment}-alb-tg-api-${random_id.target_group_sufix.hex}"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = "${var.vpc_id}"
+  target_type = "ip"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = {
+    ita_group = "${var.tag_value}"
+  }
+depends_on = [ "aws_alb.alb_pixelistic_api" ]
+}
+
+
+
+
+
+
+
+
+/* security group for WEB ALB */
 
 resource "aws_security_group" "web_inbound_sg" {
   name        = "${var.environment}-web-inbound-sg"
@@ -158,31 +187,98 @@ resource "aws_security_group" "web_inbound_sg" {
   }
 }
 
-resource "aws_alb" "alb_pixelistic-terraform" {
-  name            = "${var.environment}-alb-pixelistic-tf"
+/* security group for API ALB */
+
+resource "aws_security_group" "api_inbound_sg" {
+  name        = "${var.environment}-api-inbound-sg"
+  description = "Allow HTTP from Anywhere into ALB"
+  vpc_id      = "${var.vpc_id}"
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000 
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 8
+    to_port     = 0
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    ita_group = "${var.tag_value}"
+    Name = "${var.environment}-web-inbound-sg"
+  }
+}
+
+
+
+resource "aws_alb" "alb_pixelistic_web" {
+  name            = "${var.environment}-alb-pixelistic-web"
   subnets         = "${var.public_subnet_ids}"
   security_groups = "${concat(var.security_groups_ids, [aws_security_group.web_inbound_sg.id])}"
 
   tags = {
     ita_group = "${var.tag_value}"
-    Name        = "${var.environment}-alb-pixelistic_terraform"
+    Name        = "${var.environment}-alb-pixelistic_web"
     Environment = "${var.environment}"
   }
 }
 
-resource "aws_alb_listener" "pixelistic_terraform" {
-  load_balancer_arn = "${aws_alb.alb_pixelistic-terraform.arn}"
+resource "aws_alb" "alb_pixelistic_api" {
+  name            = "${var.environment}-alb-pixelistic-api"
+  subnets         = "${var.public_subnet_ids}"
+  security_groups = "${concat(var.security_groups_ids, [aws_security_group.web_inbound_sg.id])}"
+
+  tags = {
+    ita_group = "${var.tag_value}"
+    Name        = "${var.environment}-alb-pixelistic_api"
+    Environment = "${var.environment}"
+  }
+}
+
+
+
+resource "aws_alb_listener" "pixelistic_web" {
+  load_balancer_arn = "${aws_alb.alb_pixelistic_web.arn}"
   port              = "80"
   protocol          = "HTTP"
-  depends_on        = ["aws_alb_target_group.alb_target_group"]
+  depends_on        = ["aws_alb_target_group.alb_target_group_web"]
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_web.arn}"
     type             = "forward"
   }
 
 
 }
+
+resource "aws_alb_listener" "pixelistic_api" {
+  load_balancer_arn = "${aws_alb.alb_pixelistic_api.arn}"
+  port              = "3000"
+  protocol          = "HTTP"
+  depends_on        = ["aws_alb_target_group.alb_target_group_api"]
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.alb_target_group_api.arn}"
+    type             = "forward"
+  }
+
+}
+
+
+
+
 
 /*
 * IAM service role
@@ -294,7 +390,7 @@ resource "aws_ecs_service" "web" {
   desired_count   = 2
   launch_type     = "FARGATE"
   cluster =       "${aws_ecs_cluster.cluster.id}"
-  depends_on      = ["aws_iam_role_policy.ecs_service_role_policy", "aws_alb_target_group.alb_target_group"]
+  depends_on      = ["aws_iam_role_policy.ecs_service_role_policy", "aws_alb_target_group.alb_target_group_web"]
 
   network_configuration {
     security_groups = "${concat(var.security_groups_ids, [aws_security_group.ecs_service.id])}"
@@ -302,7 +398,7 @@ resource "aws_ecs_service" "web" {
   }
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.alb_target_group.arn}"
+    target_group_arn = "${aws_alb_target_group.alb_target_group_web.arn}"
     container_name   = "web"
     container_port   = "80"
   }
@@ -312,6 +408,44 @@ resource "aws_ecs_service" "web" {
 #  }
   #depends_on = ["aws_alb_target_group.alb_target_group"]
 }
+
+data "aws_ecs_task_definition" "api" {
+  task_definition = "${aws_ecs_task_definition.api.family}"
+  depends_on = [ "aws_ecs_task_definition.api" ]
+}
+
+
+
+resource "aws_ecs_service" "api" {
+  name            = "${var.environment}-api"
+  task_definition = "${aws_ecs_task_definition.api.family}:${max("${aws_ecs_task_definition.api.revision}", "${data.aws_ecs_task_definition.api.revision}")}"
+  desired_count   = 2
+  launch_type     = "FARGATE"
+  cluster =       "${aws_ecs_cluster.cluster.id}"
+  depends_on      = ["aws_iam_role_policy.ecs_service_role_policy", "aws_alb_target_group.alb_target_group_api"]
+
+  network_configuration {
+    security_groups = "${concat(var.security_groups_ids, [aws_security_group.ecs_service.id])}"
+    subnets         = "${var.subnets_ids}"
+  }
+
+  load_balancer {
+    target_group_arn = "${aws_alb_target_group.alb_target_group_api.arn}"
+    container_name   = "api"
+    container_port   = "3000"
+  }
+
+#  tags = {
+#    ita_group = "${var.tag_value}"
+#  }
+  #depends_on = ["aws_alb_target_group.alb_target_group"]
+}
+
+
+
+
+
+
 
 
 /*====
