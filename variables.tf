@@ -40,5 +40,5 @@ variable "environment" {
 }
 
 variable "availability_zones" {
-	type = "list"
+	type = list
 }

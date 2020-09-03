@@ -6,7 +6,7 @@ DOCDB
 resource "aws_db_subnet_group" "docdb_subnet_group" {
   name        = "${var.environment}-docdb-subnet-group"
   description = "DOCDB subnet group"
-  subnet_ids  = "${var.subnet_ids}"
+  subnet_ids  = var.subnet_ids
   tags = {
     ita_group = "${var.tag_value}"
     Environment = "${var.environment}"
@@ -15,7 +15,7 @@ resource "aws_db_subnet_group" "docdb_subnet_group" {
 
 /* Security Group for resources that want to access the Database */
 resource "aws_security_group" "db_access_sg" {
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
   name        = "${var.environment}-db-access-sg"
   description = "Allow access to DOCDB"
 
@@ -29,7 +29,7 @@ resource "aws_security_group" "db_access_sg" {
 resource "aws_security_group" "docdb_sg" {
   name = "${var.environment}-docdb-sg"
   description = "${var.environment} Security Group"
-  vpc_id = "${var.vpc_id}"
+  vpc_id = var.vpc_id
   tags = {
     ita_group = "${var.tag_value}"
     Name = "${var.environment}-docdb-sg"
@@ -65,8 +65,8 @@ resource "aws_security_group" "docdb_sg" {
 resource "aws_docdb_cluster_instance" "service" {
   count              = 1
   identifier         = "${var.environment}-docdb-cluster-instance"
-  cluster_identifier = "${aws_docdb_cluster.service.id}"
-  instance_class     = "${var.instance_class}"
+  cluster_identifier = aws_docdb_cluster.service.id
+  instance_class     = var.instance_class
 
   tags = {
     ita_group = "${var.tag_value}"
@@ -77,12 +77,12 @@ resource "aws_docdb_cluster_instance" "service" {
 
 resource "aws_docdb_cluster" "service" {
   skip_final_snapshot     = true
-  db_subnet_group_name    = "${aws_db_subnet_group.docdb_subnet_group.id}"
+  db_subnet_group_name    = aws_db_subnet_group.docdb_subnet_group.id
   cluster_identifier      = "${var.environment}-docdb-cluster"
   engine                  = "docdb"
-  master_username         = "${var.database_username}"
-  master_password         = "${var.database_password}"
-  db_cluster_parameter_group_name = "${aws_docdb_cluster_parameter_group.service.name}"
+  master_username         = var.database_username
+  master_password         = var.database_password
+  db_cluster_parameter_group_name = aws_docdb_cluster_parameter_group.service.name
   vpc_security_group_ids = ["${aws_security_group.docdb_sg.id}"]
   tags = {
     ita_group = "${var.tag_value}"
