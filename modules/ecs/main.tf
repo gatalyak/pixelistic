@@ -108,12 +108,18 @@ resource "aws_ecs_task_definition" "api" {
 Web Load Balancer
 ======*/
 
-resource "random_id" "target_group_sufix" {
+resource "random_id" "target_group_sufix_web" {
   byte_length = 2
 }
 
+resource "random_id" "target_group_sufix_api" {
+  byte_length = 2
+}
+
+
+
 resource "aws_alb_target_group" "alb_target_group_web" {
-  name     = "${var.environment}-alb-tg-web-${random_id.target_group_sufix.hex}"
+  name     = "${var.environment}-alb-tg-web-${random_id.target_group_sufix_web.hex}"
   port     = 80
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
@@ -130,8 +136,8 @@ depends_on = [ "aws_alb.alb_pixelistic_web" ]
 }
 
 resource "aws_alb_target_group" "alb_target_group_api" {
-  name     = "${var.environment}-alb-tg-api-${random_id.target_group_sufix.hex}"
-  port     = 80
+  name     = "${var.environment}-alb-tg-api-${random_id.target_group_sufix_api.hex}"
+  port     = 3000
   protocol = "HTTP"
   vpc_id   = "${var.vpc_id}"
   target_type = "ip"
@@ -217,7 +223,7 @@ resource "aws_security_group" "api_inbound_sg" {
 
   tags = {
     ita_group = "${var.tag_value}"
-    Name = "${var.environment}-web-inbound-sg"
+    Name = "${var.environment}-api-inbound-sg"
   }
 }
 
@@ -238,7 +244,7 @@ resource "aws_alb" "alb_pixelistic_web" {
 resource "aws_alb" "alb_pixelistic_api" {
   name            = "${var.environment}-alb-pixelistic-api"
   subnets         = "${var.public_subnet_ids}"
-  security_groups = "${concat(var.security_groups_ids, [aws_security_group.web_inbound_sg.id])}"
+  security_groups = "${concat(var.security_groups_ids, [aws_security_group.api_inbound_sg.id])}"
 
   tags = {
     ita_group = "${var.tag_value}"
