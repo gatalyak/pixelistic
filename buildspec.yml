@@ -19,7 +19,7 @@ phases:
       - $(aws ecr get-login --region eu-central-1 --no-include-email)
       - REP_WEB_URI=$(terraform output rep_web_url)
       - REP_API_URI=$(terraform output rep_api_url)
-      - REACT_APP_API_WEB=$(terraform output alb_dns_name_api)
+      - REACT_APP_API_WEB=http://$(terraform output alb_dns_name_api)
       - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - echo Entered the pre_build phase...      
