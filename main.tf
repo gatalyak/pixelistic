@@ -54,13 +54,13 @@ module "ecs" {
   public_subnet_ids  = module.networking.public_subnets_id
   security_groups_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)
   MONGO_DB           = module.docdb.docdb_constring
-  FRONT_URL          = "FRONT_URL"
-  AWS_ACCESS_KEY_ID  = "AWS_ACCESS_KEY_ID"
-  AWS_SECRET_ACCESS_KEY = "AWS_SECRET_ACCESS_KEY" 
-  AWS_REGION         = "AWS_REGION"
-  AWS_S3_BUCKET      = "AWS_S3_BUCKET"
-  EMAIL_USER         = "EMAIL_USER"
-  EMAIL_PASS         = "EMAIL_PASS"
+  FRONT_URL          = "http://${module.ecs.alb_dns_name_web}"
+  AWS_ACCESS_KEY_ID  = "${var.AWS_ACCESS_KEY_ID}"
+  AWS_SECRET_ACCESS_KEY = "${var.AWS_SECRET_ACCESS_KEY}"
+  AWS_REGION         = "${var.AWS_REGION}"
+  AWS_S3_BUCKET      = "${var.AWS_S3_BUCKET}"
+  EMAIL_USER         = "${var.EMAIL_USER}"
+  EMAIL_PASS         = "${var.EMAIL_PASS}"
 
   database_endpoint = module.docdb.docdb_address
   database_name     = var.database_name

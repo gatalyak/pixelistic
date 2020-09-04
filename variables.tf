@@ -42,3 +42,30 @@ variable "environment" {
 variable "availability_zones" {
 	type = list
 }
+
+variable "AWS_ACCESS_KEY_ID" {
+  description = "The AWS_ACCESS_KEY_ID"
+}
+
+variable "AWS_SECRET_ACCESS_KEY" {
+  description = "The AWS_SECRET_ACCESS_KEY"
+}
+
+variable "AWS_REGION" {
+  description = "The AWS_REGION"
+}
+
+variable "AWS_S3_BUCKET" {
+  description = "The AWS_S3_BUCKET"
+}
+
+variable "EMAIL_USER" {
+  description = "The EMAIL_USER"
+}
+
+variable "EMAIL_PASS" {
+  description = "The EMAIL_PASS"
+}
+
+
+
