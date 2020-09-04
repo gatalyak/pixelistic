@@ -45,7 +45,10 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG
 #      - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG > imagedefinitions.json
-      - printf '[{"name":"web","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"web","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG > imagedefinitions_web.json
+      - printf '[{"name":"api","imageUri":"%s"}]' $REP_API_URI:$IMAGE_TAG > imagedefinitions_api.json
 
 artifacts:
-  files: imagedefinitions.json
+  files:
+    - imagedefinitions_web.json
+    - imagedefinitions_api.json
