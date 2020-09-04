@@ -43,9 +43,9 @@ phases:
       - docker push $REP_API_URI:latest
       - docker push $REP_API_URI:$IMAGE_TAG
       - echo Writing image definitions file...
-#      - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG
-#      - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG > imagedefinitions.json
-      - printf '[{"name":"web","imageUri":"%s"}]' $$REP_WEB_URI:$IMAGE_TAG:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG
+      - printf '[{"name":"web","imageUri":"%s"}, {"name":"api","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG $REP_API_URI:$IMAGE_TAG > imagedefinitions.json
+#      - printf '[{"name":"web","imageUri":"%s"}]' $$REP_WEB_URI:$IMAGE_TAG:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files: imagedefinitions.json
