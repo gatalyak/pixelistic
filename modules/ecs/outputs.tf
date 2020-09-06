@@ -2,6 +2,9 @@ output "repository_url" {
   value = "${aws_ecr_repository.pixelistic_terraform_web.repository_url}"
 }
 
+output "aws_s3" {
+  value = "${aws_s3_bucket.bucket_terraform.bucket_regional_domain_name}"
+}
 
 output "cluster_name" {
   value = "${aws_ecs_cluster.cluster.name}"

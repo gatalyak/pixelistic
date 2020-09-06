@@ -2,6 +2,11 @@ variable "region" {
   description = "Region that the instances will be created"
 }
 
+variable "s3_bucket" {
+  description = "Name of S3 bucket"
+}
+
+
 /*====
 environment specific variables
 ======*/
@@ -21,18 +26,6 @@ variable "database_username" {
 
 variable "database_password" {
   description = "The user password for the Production database"
-}
-
-variable "secret_key_base" {
-  description = "The Rails secret key for production"
-}
-
-variable "domain" {
-  default = "The domain of your application"
-}
-
-variable "rabbit_name" {
-	description = "A random environment"
 }
 
 variable "environment" {

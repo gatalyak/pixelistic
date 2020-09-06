@@ -12,7 +12,7 @@ phases:
       - terraform --version
       - terraform init -input=false
       - terraform plan --var-file=staging.tfvars -input=false
-      # - terraform apply --var-file=staging.tfvars -input=false -auto-approve
+      - terraform apply --var-file=staging.tfvars -input=false -auto-approve
       - pip install awscli --upgrade --user
       - echo `aws --version`
       - echo Logging in to Amazon ECR...
@@ -20,7 +20,7 @@ phases:
       - REP_WEB_URI=$(terraform output rep_web_url)
       - REP_API_URI=$(terraform output rep_api_url)
       - REACT_APP_API_WEB=http://$(terraform output alb_dns_name_api)
-      - REACT_APP_AWS_S3=https://s3.us-east-2.amazonaws.com/pixelsss
+      - REACT_APP_AWS_S3=https://$(terraform output aws_s3)
       - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
       - echo REACT_APP_AWS_S3=$REACT_APP_AWS_S3
       - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)

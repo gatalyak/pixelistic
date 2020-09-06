@@ -18,3 +18,9 @@ output "rep_api_url" {
 output "docdb_constring" {
   value = module.docdb.docdb_constring
 }
+
+output "aws_s3" {
+  value = module.ecs.aws_s3
+}
+
+

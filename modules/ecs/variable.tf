@@ -6,6 +6,14 @@ variable "tag_value" {
   description = "The tag for ita"
 }
 
+variable "region" {
+  description = "The region to create resources"
+}
+
+variable "s3_bucket" {
+  description = "The region to create resources"
+}
+
 variable "vpc_id" {
   description = "The VPC id"
 }
@@ -30,10 +38,6 @@ variable "public_subnet_ids" {
   description = "The private subnets to use"
 }
 
-variable "database_endpoint" {
-  description = "The database endpoint"
-}
-
 variable "database_username" {
   description = "The database username"
 }
@@ -52,10 +56,6 @@ variable "rep_name_web" {
 
 variable "rep_name_api" {
   description = "The name of the repisitory api"
-}
-
-variable "secret_key_base" {
-  description = "The secret key base to use in the app"
 }
 
 variable "MONGO_DB" {
