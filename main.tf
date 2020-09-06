@@ -59,7 +59,7 @@ module "ecs" {
   AWS_ACCESS_KEY_ID  = "${var.AWS_ACCESS_KEY_ID}"
   AWS_SECRET_ACCESS_KEY = "${var.AWS_SECRET_ACCESS_KEY}"
   AWS_REGION         = var.region
-  AWS_S3_BUCKET      = var.s3_bucket
+  AWS_S3_BUCKET      = "${var.environment}-${var.s3_bucket}"
   EMAIL_USER         = "${var.EMAIL_USER}"
   EMAIL_PASS         = "${var.EMAIL_PASS}"
   database_name     = var.database_name
