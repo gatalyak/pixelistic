@@ -139,6 +139,19 @@ resource "aws_alb_target_group" "alb_target_group_web" {
   protocol = "HTTP"
   vpc_id   = var.vpc_id
   target_type = "ip"
+  deregistration_delay = 5
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 5
+    interval            = 30
+    matcher             = "200"
+    path                = "/"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    timeout             = 5
+    unhealthy_threshold = 2
+  }
 
   lifecycle {
     create_before_destroy = true
@@ -156,6 +169,20 @@ resource "aws_alb_target_group" "alb_target_group_api" {
   protocol = "HTTP"
   vpc_id   = var.vpc_id
   target_type = "ip"
+  deregistration_delay = 5
+
+  health_check {
+    enabled             = true
+    healthy_threshold   = 5
+    interval            = 30
+    matcher             = "404"
+    path                = "/"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    timeout             = 5
+    unhealthy_threshold = 2
+  }
+
 
   lifecycle {
     create_before_destroy = true
