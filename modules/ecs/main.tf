@@ -15,12 +15,12 @@ resource "aws_cloudwatch_log_group" "pixelistic_terraform" {
 S3 bucket
 ======*/
 resource "aws_s3_bucket" "bucket_terraform" {
-  bucket = "${var.environment}-${var.s3_bucket}"
+  bucket = "${var.environment}-${var.AWS_S3_BUCKET}"
   acl = "public-read"
   tags = {
     ita_group = var.tag_value
     Environment = "${var.environment}"
-    Name = "${var.s3_bucket}"
+    Name = "${var.AWS_S3_BUCKET}"
   }
 }
 

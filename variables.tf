@@ -3,9 +3,8 @@ variable "region" {
 }
 
 variable "s3_bucket" {
-  description = "Name of S3 bucket"
+  description = "The s3_bucket"
 }
-
 
 /*====
 environment specific variables
@@ -13,8 +12,6 @@ environment specific variables
 variable "tag_value" {
   description = "The tag for ita"
 }
-
-
 
 variable "database_name" {
   description = "The database name for Production"
@@ -42,14 +39,6 @@ variable "AWS_ACCESS_KEY_ID" {
 
 variable "AWS_SECRET_ACCESS_KEY" {
   description = "The AWS_SECRET_ACCESS_KEY"
-}
-
-variable "AWS_REGION" {
-  description = "The AWS_REGION"
-}
-
-variable "AWS_S3_BUCKET" {
-  description = "The AWS_S3_BUCKET"
 }
 
 variable "EMAIL_USER" {

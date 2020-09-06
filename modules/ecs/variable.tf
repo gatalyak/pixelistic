@@ -10,10 +10,6 @@ variable "region" {
   description = "The region to create resources"
 }
 
-variable "s3_bucket" {
-  description = "The region to create resources"
-}
-
 variable "vpc_id" {
   description = "The VPC id"
 }
