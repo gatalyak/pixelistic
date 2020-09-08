@@ -14,7 +14,7 @@ s3_bucket          = "pixelistic"
 region             = "eu-central-1"
 tag_value          = "Lv-517"
 availability_zones = ["eu-central-1a", "eu-central-1b"]
-environment        = "yg-production"
+environment        = "yg-pix-prod"
 
 
 
