@@ -31,7 +31,7 @@ variable "subnets_ids" {
 
 variable "public_subnet_ids" {
   type        = list
-  description = "The private subnets to use"
+  description = "The public subnets to use"
 }
 
 variable "database_username" {
