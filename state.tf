@@ -4,5 +4,7 @@ terraform {
    bucket  = "yg-pixelistic-terraformstate"
    region  = "eu-central-1"
    key     = "terraformstate/key"
+   dynamodb_table = "yg-pixelistic-terraform-locks"
+
  }
 }
