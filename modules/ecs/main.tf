@@ -268,7 +268,7 @@ resource "aws_security_group" "api_inbound_sg" {
 resource "aws_alb" "alb_pixelistic_web" {
   name            = "${var.environment}-alb-pixelistic-web"
   subnets         = var.public_subnet_ids
-  security_groups = concat(var.security_groups_ids, [aws_security_group.web_inbound_sg.id])
+  security_groups = concat(var.sec_groups_web_ids, [aws_security_group.web_inbound_sg.id])
 
   tags = {
     ita_group = "${var.tag_value}"
@@ -280,7 +280,7 @@ resource "aws_alb" "alb_pixelistic_web" {
 resource "aws_alb" "alb_pixelistic_api" {
   name            = "${var.environment}-alb-pixelistic-api"
   subnets         = var.public_subnet_ids
-  security_groups = concat(var.security_groups_ids, [aws_security_group.api_inbound_sg.id])
+  security_groups = concat(var.sec_groups_api_ids, [aws_security_group.api_inbound_sg.id])
 
   tags = {
     ita_group = "${var.tag_value}"
@@ -433,7 +433,7 @@ resource "aws_ecs_service" "web" {
   depends_on      = [ aws_iam_role_policy.ecs_service_role_policy, aws_alb_target_group.alb_target_group_web ]
 
   network_configuration {
-    security_groups = concat(var.security_groups_ids, [aws_security_group.ecs_service.id])
+    security_groups = concat(var.sec_groups_web_ids, [aws_security_group.ecs_service.id])
     subnets         = var.subnets_ids
   }
 
@@ -465,7 +465,7 @@ resource "aws_ecs_service" "api" {
   depends_on      = [ aws_iam_role_policy.ecs_service_role_policy, aws_alb_target_group.alb_target_group_api ]
 
   network_configuration {
-    security_groups = concat(var.security_groups_ids, [aws_security_group.ecs_service.id])
+    security_groups = concat(var.sec_groups_api_ids, [aws_security_group.ecs_service.id])
     subnets         = var.subnets_ids
   }
 

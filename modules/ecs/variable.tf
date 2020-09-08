@@ -19,9 +19,14 @@ variable "availability_zones" {
   description = "The azs to use"
 }
 
-variable "security_groups_ids" {
+variable "sec_groups_web_ids" {
   type        = list
-  description = "The SGs to use"
+  description = "The web SGs to use"
+}
+
+variable "sec_groups_api_ids" {
+  type        = list
+  description = "The web SGs to use"
 }
 
 variable "subnets_ids" {

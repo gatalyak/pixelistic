@@ -53,7 +53,8 @@ module "ecs" {
   rep_name_api       = "pixelistic_tf/api"
   subnets_ids        = module.networking.private_subnets_id
   public_subnet_ids  = module.networking.public_subnets_id
-  security_groups_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)
+  sec_groups_web_ids = module.networking.security_groups_ids
+  sec_groups_api_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)
   MONGO_DB           = module.docdb.docdb_constring
   FRONT_URL          = "http://${module.ecs.alb_dns_name_web}"
   AWS_ACCESS_KEY_ID  = "${var.AWS_ACCESS_KEY_ID}"
