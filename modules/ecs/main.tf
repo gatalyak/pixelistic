@@ -100,7 +100,7 @@ resource "aws_ecs_task_definition" "web" {
   container_definitions    = data.template_file.web_task.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "256"
+  cpu                      = "128"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_execution_role.arn
@@ -112,7 +112,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions    = data.template_file.api_task.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "256"
+  cpu                      = "128"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_execution_role.arn

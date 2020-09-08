@@ -8,7 +8,7 @@
           "hostPort": 3000
         }
       ],
-      "memory": 300,
+      "memory": 256,
       "networkMode": "awsvpc",
       "logConfiguration": {
         "logDriver": "awslogs",
