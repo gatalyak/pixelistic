@@ -14,6 +14,37 @@ resource "aws_vpc" "vpc" {
   }
 }
 
+
+/*====
+The VPC EndPoint
+======*/
+resource "aws_vpc_endpoint" "private-s3" {
+    vpc_id = aws_vpc.vpc.id
+    service_name = "com.amazonaws.${var.region}.s3"
+    route_table_ids = ["${aws_route_table.private.id}"]
+    policy = <<POLICY
+{
+    "Statement": [
+        {
+            "Action": "*",
+            "Effect": "Allow",
+            "Resource": "*",
+            "Principal": "*"
+        }
+    ]
+}
+POLICY
+
+  tags = {
+    ita_group = "${var.tag_value}"
+    Name        = "${var.environment}-vpc-ep"
+    Environment = "${var.environment}"
+  }
+
+}
+
+
+
 /*====
 Subnets
 ======*/

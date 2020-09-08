@@ -71,6 +71,7 @@ data "template_file" "web_task" {
 
   vars = {
     image           = "${aws_ecr_repository.pixelistic_terraform_web.repository_url}"
+    AWS_REGION      = "${var.AWS_REGION}"
     log_group       = "${aws_cloudwatch_log_group.pixelistic_terraform.name}"
   }
 }
@@ -100,7 +101,7 @@ resource "aws_ecs_task_definition" "web" {
   container_definitions    = data.template_file.web_task.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "128"
+  cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_execution_role.arn
@@ -112,7 +113,7 @@ resource "aws_ecs_task_definition" "api" {
   container_definitions    = data.template_file.api_task.rendered
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "128"
+  cpu                      = "256"
   memory                   = "512"
   execution_role_arn       = aws_iam_role.ecs_execution_role.arn
   task_role_arn            = aws_iam_role.ecs_execution_role.arn
@@ -266,7 +267,7 @@ resource "aws_security_group" "api_inbound_sg" {
 
 
 resource "aws_alb" "alb_pixelistic_web" {
-  name            = "${var.environment}-alb-pixelistic-web"
+  name            = "${var.environment}-pixelistic-web"
   subnets         = var.public_subnet_ids
   security_groups = concat(var.sec_groups_web_ids, [aws_security_group.web_inbound_sg.id])
 
@@ -278,7 +279,7 @@ resource "aws_alb" "alb_pixelistic_web" {
 }
 
 resource "aws_alb" "alb_pixelistic_api" {
-  name            = "${var.environment}-alb-pixelistic-api"
+  name            = "${var.environment}-pixelistic-api"
   subnets         = var.public_subnet_ids
   security_groups = concat(var.sec_groups_api_ids, [aws_security_group.api_inbound_sg.id])
 
