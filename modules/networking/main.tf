@@ -31,7 +31,8 @@ resource "aws_vpc_endpoint" "private-s3" {
             "Resource": "*",
             "Principal": "*"
         }
-    ]
+    ],
+"Version": "2008-10-17"
 }
 POLICY
 
