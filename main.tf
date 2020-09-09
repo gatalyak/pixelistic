@@ -11,10 +11,6 @@ provider "aws" {
   secret_key = ""
 }
 
-resource "aws_key_pair" "key" {
-  key_name   = "production_key"
-  public_key = file("terraform_rsa.pub")
-}
 
 module "networking" {
   source               = "./modules/networking"
@@ -24,7 +20,6 @@ module "networking" {
   private_subnets_cidr = ["10.0.10.0/24", "10.0.20.0/24"]
   region               = var.region
   availability_zones   = local.availability_zones
-  key_name             = "production_key"
   tag_value            = var.tag_value
 }
 
