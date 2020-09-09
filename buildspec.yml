@@ -1,7 +1,4 @@
 version: 0.2
-env:
-  secrets-manager:
-    TEST: prod/pixelistic:test
 phases:
   install:
     commands:

@@ -3,8 +3,6 @@ Application settings
 */
 /* docdb */
 database_name      = "yg_pixelistic"
-database_username  = "pixelistic"
-database_password  = "pixelistic"
 
 /* s3 bucket */
 s3_bucket          = "pixelistic"
