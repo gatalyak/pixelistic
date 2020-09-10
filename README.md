@@ -10,7 +10,7 @@ For jenkins pipelines please setup the hosts where the application will be deplo
 
 [docker] - for docker-compose deployment
 ### To create environment to deploy the infrastructure with terrafrom and build CI/CD with AWS:
-#### Install Terraform
+### Install Terraform
 
 Install terraform using the this link [https://learn.hashicorp.com/terraform/getting-started/install.html](https://learn.hashicorp.com/terraform/getting-started/install.html)
 
