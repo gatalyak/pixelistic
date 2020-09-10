@@ -45,7 +45,7 @@ In application root folder there are  `.tfvars` file for staging, production, de
 
 You can use different environments to deploy infrastructure with terraform:
 
-terraform apply --var-file=stage.tfvars
+terraform apply --var-file=stage.tfvars 
 
 
 
