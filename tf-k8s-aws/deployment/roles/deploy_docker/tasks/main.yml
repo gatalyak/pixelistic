@@ -1,0 +1,37 @@
+- name: Open firewall ports for frontend
+  firewalld:
+    port: "80/tcp"
+    immediate: yes
+    permanent: true
+    state: enabled
+  ignore_errors: True  
+
+- name: Open firewall ports for backend
+  firewalld:
+    port: "3000/tcp"
+    immediate: yes
+    permanent: true
+    state: enabled
+  ignore_errors: True
+  
+- name: Create app directory
+  file: path=/opt/app/deploy state=directory
+
+- name: Create docker-compose.yml
+  template:
+    src=templates/docker-compose.yml
+    dest=/opt/app/deploy/docker-compose.yml
+
+- name: Create start_docker.sh
+  template:
+    src=templates/start_docker.yml
+    dest=/opt/app/start_docker.sh
+    mode=0755
+
+- name: Start application
+  command:
+    cmd:  /opt/app/start_docker.sh
+    chdir: /opt/app/
+
+    
+  
