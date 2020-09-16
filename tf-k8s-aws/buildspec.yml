@@ -8,6 +8,7 @@ phases:
 
   pre_build:
     commands:
+      - cd tf-k8s-aws
       - terraform --version
       - terraform init -input=false
       - terraform plan --var-file=stage.tfvars -input=false
@@ -27,6 +28,8 @@ phases:
   build:
     commands:
       - echo Build started on `date`
+      - echo $REP_WEB_URI
+      - echo $REP_API_URI
       - echo Building the Docker image frontend...    
       - docker build --build-arg REACT_APP_API_WEB=$REACT_APP_API_WEB --build-arg REACT_APP_AWS_S3=$REACT_APP_AWS_S3 -t $REP_WEB_URI:latest pixelistic_fe
       - docker tag $REP_WEB_URI:latest $REP_WEB_URI:$IMAGE_TAG
