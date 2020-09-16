@@ -62,7 +62,7 @@ phases:
       - key=__REP_WEB_URI__
       - new_value=$REP_WEB_URI
       #- sed -r 's/^(\s*${key}\s*:\s*).*/\1${new_value}/" -i '$yaml_file'
-      - sed -r "s/__REP_WEB_URI__/\${REP_WEB_URI}/" -i pixelistic_fe/manifests/deployment.yml
+      - sed -r "s/__REP_WEB_URI__/$REP_WEB_URI/" -i pixelistic_fe/manifests/deployment.yml
       - cat pixelistic_fe/manifests/deployment.yml
       - echo Push the latest image to cluster
       - kubectl apply -f pixelistic_fe/manifests/deployment.yml 
