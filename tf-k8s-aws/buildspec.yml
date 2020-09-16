@@ -59,8 +59,9 @@ phases:
       - echo List directory
       - ls -la
       - echo Push the latest image to cluster
-      - kubectl apply -f pixelistic_fe/manifests/deployment.yaml
-      - kubectl apply -f pixelistic_fe/manifests/service.yaml
+      - 
+        kubectl apply -f pixelistic_fe/manifests/deployment.yml 
+      - kubectl apply -f pixelistic_fe/manifests/service.yml
 artifacts:
   files:
     - imagedefinitions_web.json
