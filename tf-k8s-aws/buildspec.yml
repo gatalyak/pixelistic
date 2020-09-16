@@ -1,0 +1,53 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - curl -fsSL https://apt.releases.hashicorp.com/gpg |  apt-key add -
+      - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      - apt-get update && apt-get install terraform
+
+  pre_build:
+    commands:
+      - terraform --version
+      - terraform init -input=false
+      - terraform plan --var-file=stage.tfvars -input=false
+      - #terraform apply --var-file=stage.tfvars -input=false -auto-approve
+      - pip install awscli --upgrade --user
+      - echo `aws --version`
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --region eu-central-1 --no-include-email)
+      - REP_WEB_URI=$(terraform output rep_web_url)
+      - REP_API_URI=$(terraform output rep_api_url)
+      - REACT_APP_API_WEB=http://$(terraform output alb_dns_name_api)
+      - REACT_APP_AWS_S3=https://$(terraform output aws_s3)
+      - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
+      - echo REACT_APP_AWS_S3=$REACT_APP_AWS_S3
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo Entered the pre_build phase...      
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image frontend...    
+      - docker build --build-arg REACT_APP_API_WEB=$REACT_APP_API_WEB --build-arg REACT_APP_AWS_S3=$REACT_APP_AWS_S3 -t $REP_WEB_URI:latest pixelistic_fe
+      - docker tag $REP_WEB_URI:latest $REP_WEB_URI:$IMAGE_TAG
+      - echo Building the Docker image backend...    
+      - docker build -t $REP_API_URI:latest pixelistic_be
+      - docker tag $REP_API_URI:latest $REP_API_URI:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images frontend...
+      - docker push $REP_WEB_URI:latest
+      - docker push $REP_WEB_URI:$IMAGE_TAG
+      - echo Pushing the Docker images backend...
+      - docker push $REP_API_URI:latest
+      - docker push $REP_API_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"web","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG > imagedefinitions_web.json
+      - printf '[{"name":"api","imageUri":"%s"}]' $REP_API_URI:$IMAGE_TAG > imagedefinitions_api.json
+
+artifacts:
+  files:
+    - imagedefinitions_web.json
+    - imagedefinitions_api.json
