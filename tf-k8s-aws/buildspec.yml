@@ -58,9 +58,10 @@ phases:
       - cd $CODEBUILD_SRC_DIR/
       - echo List directory
       - ls -la
+      - sed -r "s/^(\s*{__rep_web_url__}\s*:\s*).*/\1${rep_web_url}/" -i pixelistic_fe/manifests/deployment.yml
+      - cat pixelistic_fe/manifests/deployment.yml
       - echo Push the latest image to cluster
-      - 
-        kubectl apply -f pixelistic_fe/manifests/deployment.yml 
+      - kubectl apply -f pixelistic_fe/manifests/deployment.yml 
       - kubectl apply -f pixelistic_fe/manifests/service.yml
 artifacts:
   files:

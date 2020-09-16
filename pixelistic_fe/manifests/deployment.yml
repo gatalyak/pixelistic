@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: pixelisticfe 
-          image: 536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_tf/web:latest
+          image: __rep_web_url__:latest
           ports:
           - containerPort: 80
           
