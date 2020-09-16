@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-    name: gatalyakpixelisticfe
+    name: pixelisticfe
 spec:
     type: LoadBalancer
     ports:
     - port: 80 
     selector:
-        app: gatalyakpixelisticfe
+        app: pixelisticfe
         

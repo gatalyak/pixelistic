@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gatalyakpixelisticfe 
+  name: pixelisticfe 
   labels:
-    app: gatalyakpixelisticfe
+    app: pixelisticfe
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gatalyakpixelisticfe
+      app: pixelisticfe
   template:
     metadata:
       labels:
-        app: gatalyakpixelisticfe 
+        app: pixelisticfe 
     spec:
       containers:
-        - name: gatalyakpixelisticfe 
-          image: pixelisticacr.azurecr.io/gatalyakpixelisticfe
+        - name: pixelisticfe 
+          image: 536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_tf/web:latest
           ports:
           - containerPort: 80
           

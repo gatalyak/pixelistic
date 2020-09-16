@@ -52,7 +52,15 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"web","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG > imagedefinitions_web.json
       - printf '[{"name":"api","imageUri":"%s"}]' $REP_API_URI:$IMAGE_TAG > imagedefinitions_api.json
-
+      - echo Logging in to Amazon EKS...
+      - aws eks --region eu-central-1 update-kubeconfig --name yg-pix-stage-eks-cluster
+      - echo Change directory to secondary source
+      - cd $CODEBUILD_SRC_DIR/
+      - echo List directory
+      - ls -la
+      - echo Push the latest image to cluster
+      - kubectl apply -f pixelistic_fe/manifests/deployment.yaml
+      - kubectl apply -f pixelistic_fe/manifests/service.yaml
 artifacts:
   files:
     - imagedefinitions_web.json
