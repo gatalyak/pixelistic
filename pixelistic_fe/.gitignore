@@ -10,3 +10,4 @@ node_modules/
 __snapshots__/
 /e2e-config
 /e2e/photo.jpg
+env-config.js
