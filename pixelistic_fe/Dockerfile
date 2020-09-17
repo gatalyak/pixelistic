@@ -39,7 +39,7 @@ EXPOSE 80
 #RUN chmod +x env.sh
 
 # Start Nginx server
-CMD ["/bin/sh", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
+CMD ["/bin/sh", "-c", "cd /usr/share/nginx/html/ && ./env.sh && nginx -g \"daemon off;\""]
 
 #ENTRYPOINT ["nginx", "-g", "daemon off;"]
 
