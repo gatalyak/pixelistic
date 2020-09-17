@@ -23,17 +23,20 @@ RUN npm run build
 # ------------------------------------------------------
 FROM nginx:alpine
 COPY --from=builder /pixelistic_fe/build /usr/share/nginx/html
+COPY --from=builder /pixelistic_fe/env.sh /usr/share/nginx/html
+COPY --from=builder /pixelistic_fe/.env /usr/share/nginx/html
+RUN chmod +x /usr/share/nginx/html/env.sh
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 80
 
 # Copy .env file and shell script to container
-WORKDIR /usr/share/nginx/html
-COPY ./env.sh .
-COPY .env .
+#WORKDIR /usr/share/nginx/html
+#COPY ./env.sh .
+#COPY .env .
 
 # Make our shell script executable
-RUN chmod +x env.sh
+#RUN chmod +x env.sh
 
 # Start Nginx server
 CMD ["/bin/sh", "-c", "/usr/share/nginx/html/env.sh && nginx -g \"daemon off;\""]
