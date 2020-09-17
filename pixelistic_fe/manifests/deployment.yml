@@ -16,12 +16,12 @@ spec:
     spec:
       containers:
         - name: pixelisticfe 
-          image: 536460581283.dkr.ecr.eu-central-1.amazonaws.com/pixelistic_tf/web:latest
+          image: __REP_WEB_URI__:latest
           ports:
           - containerPort: 80
           env:
           - name: REACT_APP_API_WEB
-            value: http://api.test.com
+            value: __REACT_APP_API_WEB__
           - name: REACT_APP_AWS_S3
-            value: http://s3.bucket.com
+            value: __REACT_APP_AWS_S3__
           
