@@ -20,6 +20,8 @@ spec:
           ports:
           - containerPort: 80
           env:
-          - name: API_URL
+          - name: REACT_APP_API_WEB
             value: http://api.test.com
+          - name: REACT_APP_AWS_S3
+            value: http://s3.bucket.com
           
