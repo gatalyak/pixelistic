@@ -19,6 +19,14 @@ phases:
       - $(aws ecr get-login --region eu-central-1 --no-include-email)
       - REP_WEB_URI=$(terraform output rep_web_url)
       - REP_API_URI=$(terraform output rep_api_url)
+      - MONGO_DB=$(terraform output docdb_constring)
+      - FRONT_URL=
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY= 
+      - AWS_REGION=$(terraform output region)
+      - AWS_S3_BUCKET=$(terraform output s3_bucket)
+      - EMAIL_USER=
+      - EMAIL_PASS=
       #- REACT_APP_API_WEB=http://$(terraform output alb_dns_name_api)
       #- REACT_APP_AWS_S3=https://$(terraform output aws_s3)
       - REACT_APP_API_WEB=http://test.api.com
@@ -62,6 +70,14 @@ phases:
       - sed -i "s|__REACT_APP_API_WEB__|$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml
       - sed -i "s|__REACT_APP_AWS_S3__|$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml
       - cat pixelistic_fe/manifests/deployment.yml
+      - sed -i "s|__REP_API_URI__|$REP_API_URI|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_REGION__|$AWS_REGION|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_S3_BUCKET__|$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__EMAIL_USER__|$EMAIL_USER|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__EMAIL_PASS__|$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
       - echo Push the latest image to cluster
       - kubectl apply -f pixelistic_fe/manifests/deployment.yml 
       - kubectl apply -f pixelistic_fe/manifests/service.yml
