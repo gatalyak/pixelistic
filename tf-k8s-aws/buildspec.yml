@@ -21,9 +21,10 @@ phases:
       - REP_API_URI=$(terraform output rep_api_url)
       - MONGO_DB=$(terraform output docdb_constring)
       - FRONT_URL=
-      - AWS_ACCESS_KEY_ID=
-      - AWS_SECRET_ACCESS_KEY= 
-      - AWS_REGION=$(terraform output region)
+      #- AWS_ACCESS_KEY_ID=
+      #- AWS_SECRET_ACCESS_KEY= 
+      #- AWS_REGION=$(terraform output region)
+      - AWS_REGION=eu-central-1
       - AWS_S3_BUCKET=$(terraform output s3_bucket)
       - EMAIL_USER=
       - EMAIL_PASS=
