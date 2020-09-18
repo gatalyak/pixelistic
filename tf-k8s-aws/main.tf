@@ -24,7 +24,7 @@ module "networking" {
 }
 
 
-/*
+
 module "docdb" {
   source            = "./modules/docdb"
   environment       = var.environment
@@ -36,7 +36,7 @@ module "docdb" {
   instance_class    = "db.t3.medium"
   tag_value         = var.tag_value
 }
-*/
+
 
 
 module "eks" {
@@ -50,11 +50,11 @@ module "eks" {
   subnets_ids        = module.networking.private_subnets_id
   public_subnet_ids  = module.networking.public_subnets_id
   sec_groups_web_ids = module.networking.security_groups_ids
-  #sec_groups_api_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)
-  sec_groups_api_ids = module.networking.security_groups_ids
-  #MONGO_DB           = module.docdb.docdb_constring
-  #FRONT_URL          = "http://${module.ecs.alb_dns_name_web}"
-  MONGO_DB           = "mongo"
+  sec_groups_api_ids = concat([module.docdb.db_access_sg_id], module.networking.security_groups_ids)
+  //sec_groups_api_ids = module.networking.security_groups_ids
+  MONGO_DB           = module.docdb.docdb_constring
+  //FRONT_URL          = "http://${module.ecs.alb_dns_name_web}"
+  //MONGO_DB           = "mongo"
   FRONT_URL          = "http://front"
   AWS_ACCESS_KEY_ID  = "${var.AWS_ACCESS_KEY_ID}"
   AWS_SECRET_ACCESS_KEY = "${var.AWS_SECRET_ACCESS_KEY}"

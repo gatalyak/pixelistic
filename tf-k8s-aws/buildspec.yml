@@ -78,9 +78,12 @@ phases:
       - sed -i "s|__AWS_S3_BUCKET__|$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__EMAIL_USER__|$EMAIL_USER|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__EMAIL_PASS__|$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
+      - cat pixelistic_be/manifests/deployment.yml    
       - echo Push the latest image to cluster
       - kubectl apply -f pixelistic_fe/manifests/deployment.yml 
       - kubectl apply -f pixelistic_fe/manifests/service.yml
+      - kubectl apply -f pixelistic_be/manifests/deployment.yml 
+      - kubectl apply -f pixelistic_be/manifests/service.yml      
 artifacts:
   files:
     - imagedefinitions_web.json

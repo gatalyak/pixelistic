@@ -16,11 +16,11 @@ output "rep_api_url" {
   value = module.eks.rep_api_url
 }
 
-/*
+
 output "docdb_constring" {
   value = module.docdb.docdb_constring
 }
-*/
+
 
 output "aws_s3" {
   value = module.eks.aws_s3
