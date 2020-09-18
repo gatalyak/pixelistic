@@ -60,3 +60,7 @@ output "eks_cluster_endpoint" {
 output "eks_cluster_certificat_authority" {
   value = aws_eks_cluster.aws_eks.certificate_authority 
 }
+
+output "AWS_S3_BUCKET" {
+  value = var.AWS_S3_BUCKET
+}

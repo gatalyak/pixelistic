@@ -100,6 +100,8 @@ resource "aws_subnet" "public_subnet" {
     ita_group = "${var.tag_value}"
     Name        = "${var.environment}-${element(var.availability_zones, count.index)}-public-subnet"
     Environment = "${var.environment}"
+    "kubernetes.io/role/elb" = 1
+    "kubernetes.io/cluster/yg-pix-stage-eks-cluster" = "shared"
   }
 }
 

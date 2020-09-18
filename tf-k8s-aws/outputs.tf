@@ -26,4 +26,8 @@ output "aws_s3" {
   value = module.eks.aws_s3
 }
 
+output "AWS_S3_BUCKET" {
+  value = module.eks.AWS_S3_BUCKET
+}
+
 

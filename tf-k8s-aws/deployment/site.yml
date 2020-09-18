@@ -1,6 +1,0 @@
----
-- hosts: pixelistic
-  roles:
-    - { role: geerlingguy.nodejs, nodejs_version: "10.x" }
-    - { role: nginx, root: "/opt/app/pixelistic_fe/build" }
-    - deploy
