@@ -25,7 +25,8 @@ phases:
       #- AWS_SECRET_ACCESS_KEY= 
       #- AWS_REGION=$(terraform output region)
       - AWS_REGION=eu-central-1
-      - AWS_S3_BUCKET=$(terraform output s3_bucket)
+      #- AWS_S3_BUCKET=$(terraform output s3_bucket)
+      - AWS_S3_BUCKET=pixelistic
       - EMAIL_USER=
       - EMAIL_PASS=
       #- REACT_APP_API_WEB=http://$(terraform output alb_dns_name_api)
