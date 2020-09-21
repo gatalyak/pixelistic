@@ -85,9 +85,11 @@ resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
 resource "aws_eks_cluster" "aws_eks" {
   name = "${var.environment}-eks-cluster"
   role_arn = aws_iam_role.eks_cluster.arn
+  
 # Need to review
   vpc_config {
     subnet_ids = var.public_subnet_ids
+    security_group_ids = var.sec_groups_api_ids
   }
   
   tags = {

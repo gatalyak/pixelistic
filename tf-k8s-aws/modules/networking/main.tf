@@ -101,7 +101,7 @@ resource "aws_subnet" "public_subnet" {
     Name        = "${var.environment}-${element(var.availability_zones, count.index)}-public-subnet"
     Environment = "${var.environment}"
     "kubernetes.io/role/elb" = 1
-    "kubernetes.io/cluster/yg-pix-stage-eks-cluster" = "shared"
+    "kubernetes.io/cluster/${var.environment}-eks-cluster" = "shared"
   }
 }
 
