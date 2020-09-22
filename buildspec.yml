@@ -11,7 +11,7 @@ phases:
       - terraform --version
       - terraform init -input=false
       - terraform plan --var-file=stage.tfvars -input=false
-      - terraform apply --var-file=stage.tfvars -input=false -auto-approve
+      - #terraform apply --var-file=stage.tfvars -input=false -auto-approve
       - pip install awscli --upgrade --user
       - echo `aws --version`
       - echo Logging in to Amazon ECR...

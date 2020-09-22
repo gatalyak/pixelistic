@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gatalyakpixelisticbe
+  name: pixelisticbe
   labels:
-    app: gatalyakpixelisticbe  
+    app: pixelisticbe  
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gatalyakpixelisticbe  
+      app: pixelisticbe  
   template:
     metadata:
       labels:
-        app: gatalyakpixelisticbe 
+        app: pixelisticbe 
     spec:
       containers:
-        - name: gatalyakpixelisticbe 
-          image: pixelisticacr.azurecr.io/gatalyakpixelisticbe
+        - name: pixelisticbe 
+          image: __REP_API_URI__:latest
           ports:
           - containerPort: 3000
           env:

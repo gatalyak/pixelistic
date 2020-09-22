@@ -1,22 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gatalyakpixelisticfe 
+  name: pixelisticfe 
   labels:
-    app: gatalyakpixelisticfe
+    app: pixelisticfe
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: gatalyakpixelisticfe
+      app: pixelisticfe
   template:
     metadata:
       labels:
-        app: gatalyakpixelisticfe 
+        app: pixelisticfe 
     spec:
       containers:
-        - name: gatalyakpixelisticfe 
-          image: pixelisticacr.azurecr.io/gatalyakpixelisticfe
+        - name: pixelisticfe 
+          image: __REP_WEB_URI__:latest
           ports:
           - containerPort: 80
+          env:
+          - name: REACT_APP_API_WEB
+            value: __REACT_APP_API_WEB__
+          - name: REACT_APP_AWS_S3
+            value: __REACT_APP_AWS_S3__
           
