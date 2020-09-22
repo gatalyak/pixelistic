@@ -33,6 +33,7 @@ module "docdb" {
   database_password = var.database_password
   subnet_ids        = module.networking.private_subnets_id
   vpc_id            = module.networking.vpc_id
+  sec_groups_ids    = module.networking.security_groups_ids
   instance_class    = "db.t3.medium"
   tag_value         = var.tag_value
 }

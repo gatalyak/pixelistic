@@ -19,6 +19,8 @@ resource "aws_security_group" "db_access_sg" {
   name        = "${var.environment}-db-access-sg"
   description = "Allow access to DOCDB"
 
+
+
   tags = {
     ita_group = "${var.tag_value}"
     Name        = "${var.environment}-db-access-sg"
@@ -30,6 +32,8 @@ resource "aws_security_group" "docdb_sg" {
   name = "${var.environment}-docdb-sg"
   description = "${var.environment} Security Group"
   vpc_id = var.vpc_id
+
+
   tags = {
     ita_group = "${var.tag_value}"
     Name = "${var.environment}-docdb-sg"
@@ -49,9 +53,12 @@ resource "aws_security_group" "docdb_sg" {
       from_port = 27017
       to_port   = 27017
       protocol  = "tcp"
-      security_groups = ["${aws_security_group.db_access_sg.id}"]
+      //security_groups = ["${aws_security_group.db_access_sg.id}"]
+      //security_groups = var.sec_groups_ids
+      cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24"]
+      //cidr_blocks = [var.vpc_id.main.cidr_block]
+      //cidr_blocks = var.vpc_id.cidr_blocks
   }
-
   // outbound internet access
   egress {
     from_port = 0
