@@ -61,7 +61,7 @@ phases:
       - printf '[{"name":"web","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG > imagedefinitions_web.json
       - printf '[{"name":"api","imageUri":"%s"}]' $REP_API_URI:$IMAGE_TAG > imagedefinitions_api.json
       - echo Logging in to Amazon EKS... 
-      - aws eks --region $AWS_REGION update-kubeconfig --name EKS_NAME
+      - aws eks --region $AWS_REGION update-kubeconfig --name $EKS_NAME
       - echo Change directory to secondary source
       - cd $CODEBUILD_SRC_DIR/
       - echo List directory
