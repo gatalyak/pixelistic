@@ -89,7 +89,7 @@ resource "aws_eks_cluster" "aws_eks" {
 # Need to review
   vpc_config {
     subnet_ids = var.public_subnet_ids
-    security_group_ids = var.sec_groups_api_ids
+    security_group_ids = var.sec_groups_ids
   }
   
   tags = {

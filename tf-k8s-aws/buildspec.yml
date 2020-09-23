@@ -21,15 +21,9 @@ phases:
       - REP_API_URI=$(terraform output rep_api_url)
       - MONGO_DB=$(terraform output docdb_constring)
       - EKS_NAME=$(terraform output eks_cluster_name)
-      #- AWS_ACCESS_KEY_ID=
-      #- AWS_SECRET_ACCESS_KEY= 
-      #- AWS_REGION=$(terraform output region)
-      #- AWS_REGION=eu-central-1
       - AWS_S3_BUCKET=$(terraform output AWS_S3_BUCKET)
       - EMAIL_USER=$TF_VAR_EMAIL_USER
       - EMAIL_PASS=$TF_VAR_EMAIL_PASS
-      #- REACT_APP_API_WEB=http://$(terraform output alb_dns_name_api)
-      #- REACT_APP_AWS_S3=https://$(terraform output aws_s3)
       - REACT_APP_AWS_S3=https://$(terraform output aws_s3)
       - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
       - echo REACT_APP_AWS_S3=$REACT_APP_AWS_S3
@@ -57,9 +51,6 @@ phases:
       - echo Pushing the Docker images backend...
       - docker push $REP_API_URI:latest
       - docker push $REP_API_URI:$IMAGE_TAG
-      - echo Writing image definitions file...
-      - printf '[{"name":"web","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG > imagedefinitions_web.json
-      - printf '[{"name":"api","imageUri":"%s"}]' $REP_API_URI:$IMAGE_TAG > imagedefinitions_api.json
       - echo Logging in to Amazon EKS... 
       - aws eks --region $AWS_REGION update-kubeconfig --name $EKS_NAME
       - echo Change directory to secondary source
@@ -69,7 +60,6 @@ phases:
       #Processing back
       - sed -i "s|__REP_API_URI__|$REP_API_URI|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__MONGO_DB__|$MONGO_DB|" pixelistic_be/manifests/deployment.yml
-      #- sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_REGION__|$AWS_REGION|" pixelistic_be/manifests/deployment.yml
@@ -96,10 +86,3 @@ phases:
       - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
       - cat pixelistic_be/manifests/deployment.yml
       - kubectl apply -f pixelistic_be/manifests/deployment.yml
-
-
-
-artifacts:
-  files:
-    - imagedefinitions_web.json
-    - imagedefinitions_api.json
