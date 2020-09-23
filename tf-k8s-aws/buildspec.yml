@@ -20,7 +20,7 @@ phases:
       - REP_WEB_URI=$(terraform output rep_web_url)
       - REP_API_URI=$(terraform output rep_api_url)
       - MONGO_DB=$(terraform output docdb_constring)
-      - EKS_NAME==$(terraform output eks_cluster_name)
+      - EKS_NAME=$(terraform output eks_cluster_name)
       #- AWS_ACCESS_KEY_ID=
       #- AWS_SECRET_ACCESS_KEY= 
       #- AWS_REGION=$(terraform output region)
