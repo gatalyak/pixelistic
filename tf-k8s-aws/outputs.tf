@@ -1,12 +1,12 @@
-/*
-output "alb_dns_name_web" {
-  value = module.eks.alb_dns_name_web
+
+output "eks_cluster_name" {
+  value = module.eks.eks_cluster_name
 }
 
-output "alb_dns_name_api" {
-  value = module.eks.alb_dns_name_api
+output "region" {
+  value = var.region
 }
-*/
+
 
 output "rep_web_url" {
   value = module.eks.rep_web_url

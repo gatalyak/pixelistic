@@ -11,8 +11,8 @@ variable "subnet_ids" {
   description = "Subnet ids"
 }
 
-variable "sec_groups_ids" {
-  description = "sec_groups_ids"
+variable "vpc_cidr" {
+  description = "vpc_cidr"
 }
 
 

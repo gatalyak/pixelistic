@@ -53,11 +53,7 @@ resource "aws_security_group" "docdb_sg" {
       from_port = 27017
       to_port   = 27017
       protocol  = "tcp"
-      //security_groups = ["${aws_security_group.db_access_sg.id}"]
-      //security_groups = var.sec_groups_ids
-      cidr_blocks = ["10.0.1.0/24", "10.0.2.0/24"]
-      //cidr_blocks = [var.vpc_id.main.cidr_block]
-      //cidr_blocks = var.vpc_id.cidr_blocks
+      cidr_blocks = ["${var.vpc_cidr}"]
   }
   // outbound internet access
   egress {

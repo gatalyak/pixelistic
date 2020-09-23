@@ -11,6 +11,7 @@ resource "aws_vpc" "vpc" {
     ita_group = "${var.tag_value}"
     Name        = "${var.environment}-vpc"
     Environment = "${var.environment}"
+    "kubernetes.io/cluster/${var.environment}-eks-cluster" = "shared"
   }
 }
 

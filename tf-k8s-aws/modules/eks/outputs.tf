@@ -64,3 +64,7 @@ output "eks_cluster_certificat_authority" {
 output "AWS_S3_BUCKET" {
   value = var.AWS_S3_BUCKET
 }
+
+output "eks_cluster_name" {
+  value = "${aws_eks_cluster.aws_eks.name}"
+}

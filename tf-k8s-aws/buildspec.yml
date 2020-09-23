@@ -16,11 +16,11 @@ phases:
       - pip install awscli --upgrade --user
       - echo `aws --version`
       - echo Logging in to Amazon ECR...
-      - $(aws ecr get-login --region eu-central-1 --no-include-email)
+      - $(aws ecr get-login --region $AWS_REGION --no-include-email)
       - REP_WEB_URI=$(terraform output rep_web_url)
       - REP_API_URI=$(terraform output rep_api_url)
       - MONGO_DB=$(terraform output docdb_constring)
-      - FRONT_URL=
+      - EKS_NAME==$(terraform output eks_cluster_name)
       #- AWS_ACCESS_KEY_ID=
       #- AWS_SECRET_ACCESS_KEY= 
       #- AWS_REGION=$(terraform output region)
@@ -40,9 +40,9 @@ phases:
       - echo Build started on `date`
       - echo $REP_WEB_URI
       - echo $REP_API_URI
-      - cd ..
+      - cd $CODEBUILD_SRC_DIR/
       - echo Building the Docker image frontend...    
-      - docker build --build-arg REACT_APP_API_WEB=$REACT_APP_API_WEB --build-arg REACT_APP_AWS_S3=$REACT_APP_AWS_S3 -t $REP_WEB_URI:latest pixelistic_fe
+      - docker build -t $REP_WEB_URI:latest pixelistic_fe
       - docker tag $REP_WEB_URI:latest $REP_WEB_URI:$IMAGE_TAG
       - echo Building the Docker image backend...    
       - docker build -t $REP_API_URI:latest pixelistic_be
@@ -60,8 +60,8 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"web","imageUri":"%s"}]' $REP_WEB_URI:$IMAGE_TAG > imagedefinitions_web.json
       - printf '[{"name":"api","imageUri":"%s"}]' $REP_API_URI:$IMAGE_TAG > imagedefinitions_api.json
-      - echo Logging in to Amazon EKS...
-      - aws eks --region eu-central-1 update-kubeconfig --name yg-pix-stage-eks-cluster
+      - echo Logging in to Amazon EKS... 
+      - aws eks --region $AWS_REGION update-kubeconfig --name EKS_NAME
       - echo Change directory to secondary source
       - cd $CODEBUILD_SRC_DIR/
       - echo List directory
@@ -69,7 +69,7 @@ phases:
       #Processing back
       - sed -i "s|__REP_API_URI__|$REP_API_URI|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__MONGO_DB__|$MONGO_DB|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
+      #- sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_REGION__|$AWS_REGION|" pixelistic_be/manifests/deployment.yml
@@ -90,6 +90,15 @@ phases:
       - echo Push the latest image to cluster
       - kubectl apply -f pixelistic_fe/manifests/deployment.yml 
       - kubectl apply -f pixelistic_fe/manifests/service.yml
+      #Update env for back
+      - FRONT_URL=http://$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+      - echo FRONT_URL=$FRONT_URL
+      - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_fe/manifests/deployment.yml
+      - cat pixelistic_be/manifests/deployment.yml
+      - kubectl apply -f pixelistic_be/manifests/deployment.yml
+
+
+
 artifacts:
   files:
     - imagedefinitions_web.json
