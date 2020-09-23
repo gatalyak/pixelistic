@@ -93,7 +93,7 @@ phases:
       #Update env for back
       - FRONT_URL=http://$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
       - echo FRONT_URL=$FRONT_URL
-      - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_fe/manifests/deployment.yml
+      - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
       - cat pixelistic_be/manifests/deployment.yml
       - kubectl apply -f pixelistic_be/manifests/deployment.yml
 
