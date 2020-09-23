@@ -1,0 +1,88 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - curl -fsSL https://apt.releases.hashicorp.com/gpg |  apt-key add -
+      - apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+      - apt-get update && apt-get install terraform
+
+  pre_build:
+    commands:
+      - cd tf-k8s-aws
+      - terraform --version
+      - terraform init -input=false
+      - terraform plan --var-file=stage.tfvars -input=false
+      - #terraform apply --var-file=stage.tfvars -input=false -auto-approve
+      - pip install awscli --upgrade --user
+      - echo `aws --version`
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --region $AWS_REGION --no-include-email)
+      - REP_WEB_URI=$(terraform output rep_web_url)
+      - REP_API_URI=$(terraform output rep_api_url)
+      - MONGO_DB=$(terraform output docdb_constring)
+      - EKS_NAME=$(terraform output eks_cluster_name)
+      - AWS_S3_BUCKET=$(terraform output AWS_S3_BUCKET)
+      - EMAIL_USER=$TF_VAR_EMAIL_USER
+      - EMAIL_PASS=$TF_VAR_EMAIL_PASS
+      - REACT_APP_AWS_S3=https://$(terraform output aws_s3)
+      - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
+      - echo REACT_APP_AWS_S3=$REACT_APP_AWS_S3
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo Entered the pre_build phase...      
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo $REP_WEB_URI
+      - echo $REP_API_URI
+      - cd $CODEBUILD_SRC_DIR/
+      - echo Building the Docker image frontend...    
+      - docker build -t $REP_WEB_URI:latest pixelistic_fe
+      - docker tag $REP_WEB_URI:latest $REP_WEB_URI:$IMAGE_TAG
+      - echo Building the Docker image backend...    
+      - docker build -t $REP_API_URI:latest pixelistic_be
+      - docker tag $REP_API_URI:latest $REP_API_URI:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker images frontend...
+      - docker push $REP_WEB_URI:latest
+      - docker push $REP_WEB_URI:$IMAGE_TAG
+      - echo Pushing the Docker images backend...
+      - docker push $REP_API_URI:latest
+      - docker push $REP_API_URI:$IMAGE_TAG
+      - echo Logging in to Amazon EKS... 
+      - aws eks --region $AWS_REGION update-kubeconfig --name $EKS_NAME
+      - echo Change directory to secondary source
+      - cd $CODEBUILD_SRC_DIR/
+      - echo List directory
+      - ls -la
+      #Processing back
+      - sed -i "s|__REP_API_URI__|$REP_API_URI|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__MONGO_DB__|$MONGO_DB|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_REGION__|$AWS_REGION|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__AWS_S3_BUCKET__|$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__EMAIL_USER__|$EMAIL_USER|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__EMAIL_PASS__|$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
+      - cat pixelistic_be/manifests/deployment.yml    
+      - echo Push the latest image to cluster
+      - kubectl apply -f pixelistic_be/manifests/deployment.yml 
+      - kubectl apply -f pixelistic_be/manifests/service.yml      
+      #Processing front
+      - REACT_APP_API_WEB=http://$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+      - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
+      - sed -i "s|__REP_WEB_URI__|$REP_WEB_URI|" pixelistic_fe/manifests/deployment.yml
+      - sed -i "s|__REACT_APP_API_WEB__|$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml
+      - sed -i "s|__REACT_APP_AWS_S3__|$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml
+      - cat pixelistic_fe/manifests/deployment.yml
+      - echo Push the latest image to cluster
+      - kubectl apply -f pixelistic_fe/manifests/deployment.yml 
+      - kubectl apply -f pixelistic_fe/manifests/service.yml
+      #Update env for back
+      - FRONT_URL=http://$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+      - echo FRONT_URL=$FRONT_URL
+      - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
+      - cat pixelistic_be/manifests/deployment.yml
+      - kubectl apply -f pixelistic_be/manifests/deployment.yml
