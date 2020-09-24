@@ -58,7 +58,7 @@ phases:
       - echo List directory
       - ls -la
       #Processing back
-      - sed -i "s|__REP_API_URI__|$REP_API_URI|" pixelistic_be/manifests/deployment.yml
+      - sed -i "s|__REP_API_URI__|$REP_API_URI:latest|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__MONGO_DB__|$MONGO_DB|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
       - sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
@@ -73,7 +73,7 @@ phases:
       #Processing front
       - REACT_APP_API_WEB=http://$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
       - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
-      - sed -i "s|__REP_WEB_URI__|$REP_WEB_URI|" pixelistic_fe/manifests/deployment.yml
+      - sed -i "s|__REP_WEB_URI__|$REP_WEB_URI:latest|" pixelistic_fe/manifests/deployment.yml
       - sed -i "s|__REACT_APP_API_WEB__|$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml
       - sed -i "s|__REACT_APP_AWS_S3__|$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml
       - cat pixelistic_fe/manifests/deployment.yml

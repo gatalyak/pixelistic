@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: pixelisticfe 
-          image: __REP_WEB_URI__:latest
+          image: __REP_WEB_URI__
           ports:
           - containerPort: 80
           env:
