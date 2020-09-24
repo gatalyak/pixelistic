@@ -1,18 +1,27 @@
 steps:
   # This step builds the container image.
   - name: 'gcr.io/cloud-builders/docker'
-    id: Build
+    id: Build Frontend
     args:
     - 'build'
     - '-t'
     - 'gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA'
     - 'pixelistic_fe'
-  
+    id: Build Backend
+    args:
+    - 'build'
+    - '-t'
+    - 'gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA'
+    - 'pixelistic_be'
   # This step pushes the image to Container Registry
   # The PROJECT_ID and SHORT_SHA variables are automatically
   # replaced by Cloud Build.
   - name: 'gcr.io/cloud-builders/docker'
-    id: Push
+    id: Push Frontend
     args:
     - 'push'
     - 'gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA'
+    id: Push Backend
+    args:
+    - 'push'
+    - 'gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA'    
