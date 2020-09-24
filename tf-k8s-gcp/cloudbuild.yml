@@ -26,4 +26,15 @@ steps:
     id: Push Backend
     args:
     - 'push'
-    - 'gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA'    
+    - 'gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA'
+# This step generates the new manifest
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Generate manifest
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+     sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml && \
+     sed -i "s|__REACT_APP_API_WEB__|$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml && \
+     sed -i "s|__REACT_APP_AWS_S3__|$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml && \
+     cat pixelistic_fe/manifests/deployment.yml 
