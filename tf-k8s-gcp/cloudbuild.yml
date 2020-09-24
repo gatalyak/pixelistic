@@ -6,7 +6,7 @@ steps:
     - 'build'
     - '-t'
     - 'gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA'
-    - '../pixelistic_fe'
+    - 'pixelistic_fe'
   
   # This step pushes the image to Container Registry
   # The PROJECT_ID and SHORT_SHA variables are automatically
