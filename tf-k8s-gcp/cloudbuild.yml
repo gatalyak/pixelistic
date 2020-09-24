@@ -56,7 +56,10 @@ steps:
     - 'pixelistic_fe/manifests/deployment.yml'
     - '-f'
     - 'pixelistic_fe/manifests/service.yml'
-
+    - '-f'
+    - 'pixelistic_be/manifests/deployment.yml'
+    - '-f'
+    - 'pixelistic_be/manifests/service.yml'
     env:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
     - 'CLOUDSDK_CONTAINER_CLUSTER=yg-pix-stage-gke'  
