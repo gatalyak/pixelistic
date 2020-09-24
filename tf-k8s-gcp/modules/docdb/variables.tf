@@ -1,38 +1,34 @@
-variable "environment" {
-  description = "The environment"
+variable "project" {
 }
 
-variable "tag_value" {
-  description = "The tag for ita"
+variable "zone" {
 }
 
-variable "subnet_ids" {
-  type        = list
-  description = "Subnet ids"
+variable "instance_name" {
 }
 
-variable "vpc_cidr" {
-  description = "vpc_cidr"
+variable "cluster_ipv4_cidr" {
 }
 
-
-variable "vpc_id" {
-  description = "The VPC id"
+variable "node_count" {
+  default = "1"
 }
 
-variable "instance_class" {
-  description = "The instance type"
+variable "machine_type" {
+  default = "n1-standard-1"
 }
 
-
-variable "database_name" {
-  description = "The database name"
+variable "raw_image_source" {
 }
 
-variable "database_username" {
-  description = "The username of the database"
+variable "rs" {
+  default = "none"
 }
 
-variable "database_password" {
-  description = "The password of the database"
+variable "data_disk_gb" {
+  default = "30"
+}
+
+variable "data_disk_type" {
+  default = "pd-standard"
 }

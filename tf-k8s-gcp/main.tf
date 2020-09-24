@@ -16,8 +16,8 @@ provider "google" {
 module "networking" {
   source          = "./modules/networking"
   // base network parameters
-  network_name     = "kube"
-  subnetwork_name  = "kube-subnet"
+  network_name     = "${var.environment}-kube"
+  subnetwork_name  = "${var.environment}-kube-subnet"
   region           = var.region
   //enable_flow_logs = "false"
   // subnetwork primary and secondary CIDRS for IP aliasing
@@ -30,9 +30,9 @@ module "networking" {
 module "cluster" {
   source                           = "./modules/cluster"
   region                           = var.region
-  name                             = "gke-example"
+  name                             = "${var.environment}-gke"
   project                          = "pixelistic"
-  network_name                     = "kube"
+  network_name                     = "${var.environment}-kube"
   nodes_subnetwork_name            = module.networking.subnetwork
   kubernetes_version               = "1.16.13-gke.401"
   pods_secondary_ip_range_name     = module.networking.gke_pods_1
@@ -42,14 +42,27 @@ module "cluster" {
 
 module "node_pool" {
   source             = "./modules/node_pool"
-  name               = "gke-example-node-pool"
+  name               = "${var.environment}-gke-node-pool"
   region             = module.cluster.region
   gke_cluster_name   = module.cluster.name
-  machine_type       = "n1-standard-4"
+  machine_type       = "n1-standard-1"
   min_node_count     = "1"
   max_node_count     = "2"
   kubernetes_version = module.cluster.kubernetes_version
 }
+
+/*
+module "docdb" {
+  source = "./modules/docdb"
+  project = "my-gcp-project"
+  zone = "europe-west1-c"
+  instance_name = "mongodb-prod"
+  cluster_ipv4_cidr = "10.123.0.0/14"
+  node_count = "3"
+  raw_image_source = "https://storage.googleapis.com/image-bucket/ackee-mongodb3.4-disk-latest.tar.gz"
+  rs = "prod"
+}
+*/
 
 
 

@@ -1,3 +1,4 @@
+/*
 output "docdb_address" {
   value = "${aws_docdb_cluster.service.master_username}"
 }
@@ -10,3 +11,4 @@ output "docdb_constring" {
   value = "mongodb://${aws_docdb_cluster.service.master_username}:${aws_docdb_cluster.service.master_password}@${aws_docdb_cluster.service.endpoint}:${aws_docdb_cluster.service.port}/${var.database_name}"
 }
 
+*/
