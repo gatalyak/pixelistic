@@ -5,6 +5,7 @@ steps:
     args: 
     - '-c'
     - | 
+        echo $_AWS_SECRET_ACCESS_KEY
         cd tf-k8s-gcp/
         terraform init -input=false
         terraform plan --var-file=stage.tfvars -input=false
