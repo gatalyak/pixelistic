@@ -53,7 +53,7 @@ steps:
       gcloud container clusters get-credentials --project="pixelistic" --zone="europe-west1" "yg-pix-stage-gke" &&
       cat /workspace/build_vars &&
       source /workspace/build_vars &&
-      echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
+      echo CLUSTER_NAME=$CLUSTER_NAME REGION=$REGION &&
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) &&
       AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) &&
       REACT_APP_AWS_S3=$(gcloud secrets versions access --secret=REACT_APP_AWS_S3 latest) &&
