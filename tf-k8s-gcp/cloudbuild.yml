@@ -9,7 +9,7 @@ steps:
         terraform init -input=false
         export PR=PIXELISTIC
         export $$PR_CLUSTER_NAME=$(terraform output cluster_name) &&
-        export $$PR_PIXELISTIC_REGION=$(terraform output region) &&
+        export $$PR_PIXELISTIC_REGION=$(terraform output cluster_name) &&
         env | grep "^$$PR_" > /workspace/build_vars &&
         cat /workspace/build_vars 
   #terraform plan --var-file=stage.tfvars -input=false
@@ -78,7 +78,7 @@ steps:
       sed -i "s|__EMAIL_USER__|$$EMAIL_USER|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__EMAIL_PASS__|$$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml && \
       cat pixelistic_be/manifests/deployment.yml
-  env:
+    env:
     - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
     - 'CLOUDSDK_CONTAINER_CLUSTER=yg-pix-stage-gke'     
   - name: 'gcr.io/cloud-builders/kubectl'
