@@ -5,9 +5,9 @@ steps:
     args: 
     - '-c'
     - | 
-        cd tf-k8s-gcp/
-        terraform init -input=false
-        export PR=PIXELISTIC
+        cd tf-k8s-gcp/ &&
+        terraform init -input=false &&
+        terraform plan --var-file=stage.tfvars -input=false &&
         export PIXELISTIC_CLUSTER_NAME=$(terraform output cluster_name) &&
         export PIXELISTIC_REGION=$(terraform output region) &&
         env | grep "^PIXELISTIC_" > /workspace/build_vars &&
