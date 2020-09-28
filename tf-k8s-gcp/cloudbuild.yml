@@ -50,15 +50,16 @@ steps:
     - '-c'
     - |
       CLUSTER_NAME=$(cat cluster_name.txt) && \
-      REGION=$(region.txt) && \
+      REGION=$(cat region.txt) && \
       echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION && \
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) && \
       echo AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID && \
       AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) && \
       echo AWS_SECRET_ACCESS_KEY=$$AWS_SECRET_ACCESS_KEY && \
+      REACT_APP_AWS_S3=$(gcloud secrets versions access --secret=REACT_APP_AWS_S3 latest) && \
       sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml && \
       sed -i "s|__REACT_APP_API_WEB__|http://34.77.161.62|" pixelistic_fe/manifests/deployment.yml && \
-      sed -i "s|__REACT_APP_AWS_S3__|https://yg-pix-stage-pixelistic.s3.eu-central-1.amazonaws.com|" pixelistic_fe/manifests/deployment.yml && \
+      sed -i "s|__REACT_APP_AWS_S3__|$$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml && \
       cat pixelistic_fe/manifests/deployment.yml && \       
       sed -i "s|__AWS_ACCESS_KEY_ID__|$$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__AWS_SECRET_ACCESS_KEY__|$$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml && \
