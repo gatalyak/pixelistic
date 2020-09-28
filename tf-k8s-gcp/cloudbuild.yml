@@ -1,4 +1,13 @@
 steps:
+  - name: 'hashicorp/terraform:latest'
+    id: Terraform apply
+    entrypoint: 'sh'
+    args: 
+    - '-c'
+    - | 
+        terraform init -input=false
+        terraform plan --var-file=stage.tfvars -input=false
+  #terraform apply --var-file=stage.tfvars -input=false -auto-approve
   # This step builds the container image.
   - name: 'gcr.io/cloud-builders/docker'
     id: Build Frontend
