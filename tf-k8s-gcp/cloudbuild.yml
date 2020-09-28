@@ -8,8 +8,8 @@ steps:
         cd tf-k8s-gcp/
         terraform init -input=false
         terraform output cluster_name
-        export CLUSTER_NAME=$$(terraform output cluster_name)
-        echo CLUSTER_NAME=$CLUSTER_NAME
+        export CLUSTER_NAME=$(terraform output cluster_name)
+        echo CLUSTER_NAME=$$CLUSTER_NAME
   #terraform plan --var-file=stage.tfvars -input=false
   #terraform apply --var-file=stage.tfvars -input=false -auto-approve
   # This step builds the container image.
