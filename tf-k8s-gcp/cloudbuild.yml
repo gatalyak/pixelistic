@@ -91,8 +91,7 @@ steps:
       REGION=$$PIXELISTIC_REGION
       gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME &&
       echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
-      kubectl apply \
-      -f pixelistic_fe/manifests/deployment.yml \
-      -f pixelistic_fe/manifests/service.yml \
-      -f pixelistic_be/manifests/deployment.yml
-      -f pixelistic_be/manifests/service.yml
+      kubectl apply -f pixelistic_fe/manifests/deployment.yml &&
+      kubectl apply -f pixelistic_fe/manifests/service.yml &&
+      kubectl apply -f pixelistic_be/manifests/deployment.yml &&
+      kubectl apply -f pixelistic_be/manifests/service.yml
