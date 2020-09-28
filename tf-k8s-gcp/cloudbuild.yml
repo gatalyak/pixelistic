@@ -5,6 +5,7 @@ steps:
     args: 
     - '-c'
     - | 
+        cd tf-k8s-gcp/
         terraform init -input=false
         terraform plan --var-file=stage.tfvars -input=false
   #terraform apply --var-file=stage.tfvars -input=false -auto-approve
