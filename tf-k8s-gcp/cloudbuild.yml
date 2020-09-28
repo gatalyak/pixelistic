@@ -4,10 +4,8 @@ steps:
     args:
       - "-c"
       - |
-        gcloud functions deploy ... \
-        --set-env-vars=AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest)
-        echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY  
-
+        AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest)
+        echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
   - name: 'hashicorp/terraform:latest'
     id: Terraform apply
     entrypoint: 'sh'
