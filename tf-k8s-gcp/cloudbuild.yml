@@ -7,7 +7,8 @@ steps:
     - | 
         cd tf-k8s-gcp/
         terraform init -input=false
-        terraform output cluster_name
+        terraform output cluster_name > cluster_name.txt
+        terraform output region > region.txt
         export CLUSTER_NAME=$(terraform output cluster_name)
         echo CLUSTER_NAME=$$CLUSTER_NAME
   #terraform plan --var-file=stage.tfvars -input=false
@@ -48,7 +49,9 @@ steps:
     args:
     - '-c'
     - |
-      echo CLUSTER_NAME=$$CLUSTER_NAME && \
+      CLUSTER_NAME=$(cat cluster_name.txt) && \
+      REGION=$(region.txt) && \
+      echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION && \
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) && \
       echo AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID && \
       AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) && \
