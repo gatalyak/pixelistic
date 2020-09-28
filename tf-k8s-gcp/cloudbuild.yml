@@ -48,18 +48,17 @@ steps:
     args:
     - '-c'
     - |
+      echo CLUSTER_NAME=$$CLUSTER_NAME && \
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) && \
-      echo AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID && \
+      echo AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID && \
       AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) && \
-      gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest > AWS_SECRET_ACCESS_KEY.txt && \
-      AWS_SECRET_ACCESS_KEY=$(cat AWS_SECRET_ACCESS_KEY.txt) && \
-      echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY && \
+      echo AWS_SECRET_ACCESS_KEY=$$AWS_SECRET_ACCESS_KEY && \
       sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml && \
       sed -i "s|__REACT_APP_API_WEB__|http://34.77.161.62|" pixelistic_fe/manifests/deployment.yml && \
       sed -i "s|__REACT_APP_AWS_S3__|https://yg-pix-stage-pixelistic.s3.eu-central-1.amazonaws.com|" pixelistic_fe/manifests/deployment.yml && \
       cat pixelistic_fe/manifests/deployment.yml && \       
-      sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml && \
-      sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml && \
+      sed -i "s|__AWS_ACCESS_KEY_ID__|$$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml && \
+      sed -i "s|__AWS_SECRET_ACCESS_KEY__|$$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__FRONT_URL__|http://35.205.190.75|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__REP_API_URI__|gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__MONGO_DB__|mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/pixelistic?replicaSet=rs0|" pixelistic_be/manifests/deployment.yml && \
@@ -67,7 +66,7 @@ steps:
       sed -i "s|__AWS_S3_BUCKET__|yg-pix-stage-pixelistic|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__EMAIL_USER__|$EMAIL_USER|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__EMAIL_PASS__|$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml && \
-      cat pixelistic_be/manifests/deployment.yml
+      cat pixelistic_be/manifests/deployment.yml 
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Deploy
     args:
