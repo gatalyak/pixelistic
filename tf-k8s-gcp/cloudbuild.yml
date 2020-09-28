@@ -9,7 +9,7 @@ steps:
         terraform init -input=false
         export PR=PIXELISTIC
         export PIXELISTIC_CLUSTER_NAME=$(terraform output cluster_name) &&
-        export PIXELISTIC_REGION=$(terraform output cluster_name) &&
+        export PIXELISTIC_REGION=$(terraform output region) &&
         env | grep "^PIXELISTIC_" > /workspace/build_vars &&
         cat /workspace/build_vars 
   #terraform plan --var-file=stage.tfvars -input=false
