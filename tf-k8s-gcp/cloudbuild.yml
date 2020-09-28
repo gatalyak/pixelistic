@@ -55,9 +55,7 @@ steps:
       source /workspace/build_vars &&
       echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) &&
-      echo AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID &&
       AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) &&
-      echo AWS_SECRET_ACCESS_KEY=$$AWS_SECRET_ACCESS_KEY &&
       REACT_APP_AWS_S3=$(gcloud secrets versions access --secret=REACT_APP_AWS_S3 latest) &&
       DATABASE=$(gcloud secrets versions access --secret=DATABASE latest) &&
       AWS_REGION=$(gcloud secrets versions access --secret=AWS_REGION latest) &&
