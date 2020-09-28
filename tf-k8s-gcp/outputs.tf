@@ -8,6 +8,10 @@ output "region" {
   value = var.region
 }
 
+output "cluster_name" {
+  value = module.cluster.name
+}
+
 /*
 output "rep_web_url" {
   value = module.eks.rep_web_url
