@@ -69,7 +69,6 @@ steps:
       sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml &&
       sed -i "s|__REACT_APP_API_WEB__|http://34.77.161.62|" pixelistic_fe/manifests/deployment.yml &&
       sed -i "s|__REACT_APP_AWS_S3__|$$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml &&
-      cat pixelistic_fe/manifests/deployment.yml &&
       sed -i "s|__AWS_ACCESS_KEY_ID__|$$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__AWS_SECRET_ACCESS_KEY__|$$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__FRONT_URL__|http://$$FRONT_URL|" pixelistic_be/manifests/deployment.yml &&
@@ -78,8 +77,7 @@ steps:
       sed -i "s|__AWS_REGION__|$$AWS_REGION|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__AWS_S3_BUCKET__|$$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__EMAIL_USER__|$$EMAIL_USER|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__EMAIL_PASS__|$$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml &&
-      cat pixelistic_be/manifests/deployment.yml
+      sed -i "s|__EMAIL_PASS__|$$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Deploy
     entrypoint: /bin/bash
@@ -87,8 +85,8 @@ steps:
     - '-c'
     - |
       source /workspace/build_vars &&
-      CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME
-      REGION=$$PIXELISTIC_REGION
+      CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME &&
+      REGION=$$PIXELISTIC_REGION && 
       gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME &&
       echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
       kubectl apply -f pixelistic_fe/manifests/deployment.yml &&
