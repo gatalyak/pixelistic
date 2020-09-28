@@ -1,10 +1,4 @@
-steps:
-  - name: gcr.io/cloud-builders/gcloud
-    entrypoint: /bin/bash
-    args:
-      - "-c"
-      - |
-        gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest > AWS_SECRET_ACCESS_KEY.txt        
+steps:      
   - name: 'hashicorp/terraform:latest'
     id: Terraform apply
     entrypoint: 'sh'
@@ -16,7 +10,7 @@ steps:
         echo _AWS_SECRET_ACCESS_KEY=$_AWS_SECRET_ACCESS_KEY
         cd tf-k8s-gcp/
         terraform init -input=false
-        terraform plan --var-file=stage.tfvars -input=false
+  #terraform plan --var-file=stage.tfvars -input=false
   #terraform apply --var-file=stage.tfvars -input=false -auto-approve
   # This step builds the container image.
   - name: 'gcr.io/cloud-builders/docker'
@@ -53,6 +47,8 @@ steps:
     args:
     - '-c'
     - |
+      AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) && \
+      echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
       sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml && \
       sed -i "s|__REACT_APP_API_WEB__|$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml && \
       sed -i "s|__REACT_APP_AWS_S3__|$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml && \
