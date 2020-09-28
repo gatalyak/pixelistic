@@ -2,7 +2,7 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     id: Extract secrets
     entrypoint: 'bash'
-    args: [ '-c', "gcloud secrets versions access latest --secret=secret-data --format='get(payload.data)' | tr '_-' '/+' | base64 -d > AWS_SECRET_ACCESS_KEY.txt" ] 
+    args: [ '-c', "gcloud secrets versions access latest --secret=AWS_SECRET_ACCESS_KEY --format='get(payload.data)' | tr '_-' '/+' | base64 -d > AWS_SECRET_ACCESS_KEY.txt" ] 
   - name: 'hashicorp/terraform:latest'
     id: Terraform apply
     entrypoint: 'sh'
