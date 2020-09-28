@@ -49,8 +49,6 @@ steps:
     args:
     - '-c'
     - |
-      CLUSTER_NAME=$(cat cluster_name.txt) && \
-      REGION=$(cat region.txt) && \
       echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION && \
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) && \
       echo AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID && \
