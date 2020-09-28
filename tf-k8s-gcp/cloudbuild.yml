@@ -96,6 +96,10 @@ steps:
         kubectl apply -f pixelistic_fe/manifests/service.yml
         kubectl apply -f pixelistic_be/manifests/deployment.yml
         kubectl apply -f pixelistic_be/manifests/service.yml
+        FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        BACK_URL=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+        echo FRONT_URL=http://$$FRONT_URL
+        echo BACK_URL=http://$$FRONT_URL:3000
       else
         echo "***************************** SKIPPING APPLYING *******************************"
         echo "Branch '$BRANCH_NAME' does not allow to trigger deployment."
