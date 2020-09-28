@@ -1,11 +1,21 @@
 steps:
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: /bin/bash
+    args:
+      - "-c"
+      - |
+        gcloud functions deploy ... \
+        --set-env-vars=AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest)
+        echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY  
+
   - name: 'hashicorp/terraform:latest'
     id: Terraform apply
     entrypoint: 'sh'
     args: 
     - '-c'
     - | 
-        echo $_AWS_SECRET_ACCESS_KEY
+        echo _AWS_SECRET_ACCESS_KEY=$_AWS_SECRET_ACCESS_KEY
+
         cd tf-k8s-gcp/
         terraform init -input=false
         terraform plan --var-file=stage.tfvars -input=false
