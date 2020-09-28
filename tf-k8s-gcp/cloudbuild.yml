@@ -64,7 +64,7 @@ steps:
       AWS_S3_BUCKET=$(gcloud secrets versions access --secret=AWS_S3_BUCKET latest) &&
       EMAIL_USER=$(gcloud secrets versions access --secret=EMAIL_USER latest) &&
       EMAIL_PASS=$(gcloud secrets versions access --secret=EMAIL_PASS latest) &&
-      FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}') &&
+      kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}' &&
       echo FRONT_URL=$$FRONT_URL &&
       echo FRONT_URL=$FRONT_URL &&
       sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml &&
