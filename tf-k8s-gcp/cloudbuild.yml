@@ -1,6 +1,6 @@
 steps:      
   - name: 'hashicorp/terraform:latest'
-    id: Terraform apply
+    id: Terraform
     entrypoint: 'sh'
     args: 
     - '-c'
