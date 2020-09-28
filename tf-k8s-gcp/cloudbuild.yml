@@ -11,10 +11,9 @@ steps:
     args: 
     - '-c'
     - | 
-        AWS_SECRET_ACCESS_KEY=(cat AWS_SECRET_ACCESS_KEY.txt)
+        AWS_SECRET_ACCESS_KEY=$(cat AWS_SECRET_ACCESS_KEY.txt)
         echo AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
         echo _AWS_SECRET_ACCESS_KEY=$_AWS_SECRET_ACCESS_KEY
-
         cd tf-k8s-gcp/
         terraform init -input=false
         terraform plan --var-file=stage.tfvars -input=false
