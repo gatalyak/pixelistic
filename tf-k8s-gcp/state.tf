@@ -1,6 +1,5 @@
 terraform {
-  
-  backend "gcs" {    
+  backend "gcs" {
     bucket = "pixelistic-tfstate"
     prefix = "terraform/state"
   }
