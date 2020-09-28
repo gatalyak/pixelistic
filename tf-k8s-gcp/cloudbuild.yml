@@ -29,7 +29,7 @@ steps:
     - '-t'
     - 'gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA'
     - 'pixelistic_be'
-  # This step pushes the image to Container Registry
+  # This step pushes the image to Container Registry 
   # The PROJECT_ID and SHORT_SHA variables are automatically
   # replaced by Cloud Build.
   - name: 'gcr.io/cloud-builders/docker'
