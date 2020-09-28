@@ -50,11 +50,11 @@ steps:
     args:
     - '-c'
     - |
-      gcloud container clusters get-credentials --project="pixelistic" --zone="europe-west1" "yg-pix-stage-gke" &&
       cat /workspace/build_vars &&
       source /workspace/build_vars &&
       CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME
       REGION=$$PIXELISTIC_REGION
+      gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME &&
       echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) &&
       AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) &&
@@ -65,14 +65,14 @@ steps:
       EMAIL_USER=$(gcloud secrets versions access --secret=EMAIL_USER latest) &&
       EMAIL_PASS=$(gcloud secrets versions access --secret=EMAIL_PASS latest) &&
       FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') &&
-      echo FRONT_URL=$$FRONT_URL &&
+      REACT_APP_API_WEB=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') &&      
       sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml &&
       sed -i "s|__REACT_APP_API_WEB__|http://34.77.161.62|" pixelistic_fe/manifests/deployment.yml &&
       sed -i "s|__REACT_APP_AWS_S3__|$$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml &&
       cat pixelistic_fe/manifests/deployment.yml &&
       sed -i "s|__AWS_ACCESS_KEY_ID__|$$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__AWS_SECRET_ACCESS_KEY__|$$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__FRONT_URL__|http://35.205.190.75|" pixelistic_be/manifests/deployment.yml &&
+      sed -i "s|__FRONT_URL__|http://$$FRONT_URL|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__REP_API_URI__|gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__MONGO_DB__|mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/$$DATABASE?replicaSet=rs0|" pixelistic_be/manifests/deployment.yml &&
       sed -i "s|__AWS_REGION__|$$AWS_REGION|" pixelistic_be/manifests/deployment.yml &&
@@ -82,16 +82,17 @@ steps:
       cat pixelistic_be/manifests/deployment.yml
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Deploy
+    entrypoint: /bin/bash
     args:
-    - 'apply'
-    - '-f'
-    - 'pixelistic_fe/manifests/deployment.yml'
-    - '-f'
-    - 'pixelistic_fe/manifests/service.yml'
-    - '-f'
-    - 'pixelistic_be/manifests/deployment.yml'
-    - '-f'
-    - 'pixelistic_be/manifests/service.yml'
-    env:
-    - 'CLOUDSDK_COMPUTE_ZONE=europe-west1'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=yg-pix-stage-gke'  
+    - '-c'
+    - |
+      source /workspace/build_vars &&
+      CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME
+      REGION=$$PIXELISTIC_REGION
+      gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME &&
+      echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
+      kubectl apply \
+      -f pixelistic_fe/manifests/deployment.yml \
+      -f pixelistic_fe/manifests/service.yml \
+      -f pixelistic_be/manifests/deployment.yml
+      -f pixelistic_be/manifests/service.yml
