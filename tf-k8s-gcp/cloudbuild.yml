@@ -5,12 +5,12 @@ steps:
     args: 
     - '-c'
     - | 
-        cd tf-k8s-gcp/ &&
-        terraform init -input=false &&
-        terraform plan --var-file=stage.tfvars -input=false &&
-        export PIXELISTIC_CLUSTER_NAME=$(terraform output cluster_name) &&
-        export PIXELISTIC_REGION=$(terraform output region) &&
-        env | grep "^PIXELISTIC_" > /workspace/build_vars &&
+        cd tf-k8s-gcp/
+        terraform init -input=false
+        terraform plan --var-file=stage.tfvars -input=false
+        export PIXELISTIC_CLUSTER_NAME=$(terraform output cluster_name)
+        export PIXELISTIC_REGION=$(terraform output region)
+        env | grep "^PIXELISTIC_" > /workspace/build_vars
         cat /workspace/build_vars 
   #terraform plan --var-file=stage.tfvars -input=false
   #terraform apply --var-file=stage.tfvars -input=false -auto-approve
@@ -50,33 +50,33 @@ steps:
     args:
     - '-c'
     - |
-      cat /workspace/build_vars &&
-      source /workspace/build_vars &&
+      cat /workspace/build_vars
+      source /workspace/build_vars
       CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME
       REGION=$$PIXELISTIC_REGION
-      gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME &&
-      echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
-      AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) &&
-      AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest) &&
-      REACT_APP_AWS_S3=$(gcloud secrets versions access --secret=REACT_APP_AWS_S3 latest) &&
-      DATABASE=$(gcloud secrets versions access --secret=DATABASE latest) &&
-      AWS_REGION=$(gcloud secrets versions access --secret=AWS_REGION latest) &&
-      AWS_S3_BUCKET=$(gcloud secrets versions access --secret=AWS_S3_BUCKET latest) &&
-      EMAIL_USER=$(gcloud secrets versions access --secret=EMAIL_USER latest) &&
-      EMAIL_PASS=$(gcloud secrets versions access --secret=EMAIL_PASS latest) &&
-      FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') &&
-      REACT_APP_API_WEB=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') &&      
-      sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml &&
-      sed -i "s|__REACT_APP_API_WEB__|http://34.77.161.62|" pixelistic_fe/manifests/deployment.yml &&
-      sed -i "s|__REACT_APP_AWS_S3__|$$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml &&
-      sed -i "s|__AWS_ACCESS_KEY_ID__|$$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__AWS_SECRET_ACCESS_KEY__|$$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__FRONT_URL__|http://$$FRONT_URL|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__REP_API_URI__|gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__MONGO_DB__|mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/$$DATABASE?replicaSet=rs0|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__AWS_REGION__|$$AWS_REGION|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__AWS_S3_BUCKET__|$$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml &&
-      sed -i "s|__EMAIL_USER__|$$EMAIL_USER|" pixelistic_be/manifests/deployment.yml &&
+      gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME
+      echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION
+      AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest)
+      AWS_SECRET_ACCESS_KEY=$(gcloud secrets versions access --secret=AWS_SECRET_ACCESS_KEY latest)
+      REACT_APP_AWS_S3=$(gcloud secrets versions access --secret=REACT_APP_AWS_S3 latest)
+      DATABASE=$(gcloud secrets versions access --secret=DATABASE latest)
+      AWS_REGION=$(gcloud secrets versions access --secret=AWS_REGION latest)
+      AWS_S3_BUCKET=$(gcloud secrets versions access --secret=AWS_S3_BUCKET latest)
+      EMAIL_USER=$(gcloud secrets versions access --secret=EMAIL_USER latest)
+      EMAIL_PASS=$(gcloud secrets versions access --secret=EMAIL_PASS latest)
+      FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+      REACT_APP_API_WEB=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')    
+      sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml
+      sed -i "s|__REACT_APP_API_WEB__|http://34.77.161.62|" pixelistic_fe/manifests/deployment.yml
+      sed -i "s|__REACT_APP_AWS_S3__|$$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml
+      sed -i "s|__AWS_ACCESS_KEY_ID__|$$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
+      sed -i "s|__AWS_SECRET_ACCESS_KEY__|$$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
+      sed -i "s|__FRONT_URL__|http://$$FRONT_URL|" pixelistic_be/manifests/deployment.yml
+      sed -i "s|__REP_API_URI__|gcr.io/$PROJECT_ID/pixelistic_be:$SHORT_SHA|" pixelistic_be/manifests/deployment.yml
+      sed -i "s|__MONGO_DB__|mongodb://mongo-0.mongo,mongo-1.mongo,mongo-2.mongo:27017/$$DATABASE?replicaSet=rs0|" pixelistic_be/manifests/deployment.yml
+      sed -i "s|__AWS_REGION__|$$AWS_REGION|" pixelistic_be/manifests/deployment.yml
+      sed -i "s|__AWS_S3_BUCKET__|$$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml
+      sed -i "s|__EMAIL_USER__|$$EMAIL_USER|" pixelistic_be/manifests/deployment.yml
       sed -i "s|__EMAIL_PASS__|$$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
   - name: gcr.io/cloud-builders/curl
     entrypoint: bash
@@ -93,12 +93,19 @@ steps:
     args:
     - '-c'
     - |
-      source /workspace/build_vars &&
-      CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME &&
-      REGION=$$PIXELISTIC_REGION && 
-      gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME &&
-      echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION &&
-      kubectl apply -f pixelistic_fe/manifests/deployment.yml &&
-      kubectl apply -f pixelistic_fe/manifests/service.yml &&
-      kubectl apply -f pixelistic_be/manifests/deployment.yml &&
-      kubectl apply -f pixelistic_be/manifests/service.yml
+      if [ "$BRANCH_NAME" = "master" ]; then
+        source /workspace/build_vars
+        CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME
+        REGION=$$PIXELISTIC_REGION 
+        gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME
+        echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION
+        kubectl apply -f pixelistic_fe/manifests/deployment.yml
+        kubectl apply -f pixelistic_fe/manifests/service.yml
+        kubectl apply -f pixelistic_be/manifests/deployment.yml
+        kubectl apply -f pixelistic_be/manifests/service.yml
+      else
+        echo "***************************** SKIPPING APPLYING *******************************"
+        echo "Branch '$BRANCH_NAME' does not allow to trigger deployment."
+        echo "*******************************************************************************"
+      fi
+
