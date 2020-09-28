@@ -50,6 +50,7 @@ steps:
     args:
     - '-c'
     - |
+      source /workspace/build_vars &&
       echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION && \
       AWS_ACCESS_KEY_ID=$(gcloud secrets versions access --secret=AWS_ACCESS_KEY_ID latest) && \
       echo AWS_ACCESS_KEY_ID=$$AWS_ACCESS_KEY_ID && \
