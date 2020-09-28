@@ -7,10 +7,11 @@ steps:
     - | 
         cd tf-k8s-gcp/
         terraform init -input=false
-        terraform output cluster_name > cluster_name.txt
-        terraform output region > region.txt
-        export CLUSTER_NAME=$(terraform output cluster_name)
-        echo CLUSTER_NAME=$$CLUSTER_NAME
+        export PR=PIXELISTIC
+        export $$PR_CLUSTER_NAME=$(terraform output cluster_name) &&
+        export $$PR_PIXELISTIC_REGION=$(terraform output region) &&
+        env | grep "^$$PR_" > /workspace/build_vars &&
+        cat /workspace/build_vars 
   #terraform plan --var-file=stage.tfvars -input=false
   #terraform apply --var-file=stage.tfvars -input=false -auto-approve
   # This step builds the container image.
