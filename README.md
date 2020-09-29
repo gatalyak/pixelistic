@@ -21,7 +21,7 @@ AWS_SECRET_ACCESS_KEY
 ```
 ### Apply terraform infrastructure to create AWS backend
 
-Please go to the terraform_init and run terraform apply
+Please go to the terraform_init and run terraform apply 
 
 ### Create CodePipeline on AWS
 On AWS create CodePipeline of AWS with ability to build docker images. Make sure you have set up policy for your CodePipeline to have access to the AWS ECR.
