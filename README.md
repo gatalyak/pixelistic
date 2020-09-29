@@ -1,7 +1,7 @@
 # pixelistic
 # This is for educational purpose only to show how the application was dockerized and deployed to the azure and aws clouds
 Please set your environments from env.example to build and run applications. The pipelines are:
-1. azure-pipelines.yml - pipepine for Azure DevOps.
+1. azure-pipelines.yml - pipepine for Azure DevOps. 
 2. Jenkinsfile - pipeline for local deploy.
 3. Jenkinsfile_docker - pipeline for docker-compose deploy.
 
