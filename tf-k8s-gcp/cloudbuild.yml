@@ -81,7 +81,7 @@ steps:
       FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
       REACT_APP_API_WEB=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')    
       sed -i "s|__REP_WEB_URI__|gcr.io/$PROJECT_ID/pixelistic_fe:$SHORT_SHA|" pixelistic_fe/manifests/deployment.yml
-      sed -i "s|__REACT_APP_API_WEB__|http://34.77.161.62|" pixelistic_fe/manifests/deployment.yml
+      sed -i "s|__REACT_APP_API_WEB__|http://$$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml
       sed -i "s|__REACT_APP_AWS_S3__|$$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml
       sed -i "s|__AWS_ACCESS_KEY_ID__|$$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
       sed -i "s|__AWS_SECRET_ACCESS_KEY__|$$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
