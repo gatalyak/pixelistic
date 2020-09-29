@@ -17,7 +17,7 @@ phases:
           terraform plan --var-file=stage.tfvars -input=false 
         echo "*********************************************************************************"
         else
-          echo terraform apply --var-file=stage.tfvars -input=false -auto-approve
+          terraform apply --var-file=stage.tfvars -input=false -auto-approve
         fi
       - pip install awscli --upgrade --user
       - echo `aws --version`
