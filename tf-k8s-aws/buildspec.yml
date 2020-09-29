@@ -11,8 +11,14 @@ phases:
       - cd tf-k8s-aws
       - terraform --version
       - terraform init -input=false
-      - terraform plan --var-file=stage.tfvars -input=false
-      - #terraform apply --var-file=stage.tfvars -input=false -auto-approve
+      - |
+        if [ "$CODEBUILD_WEBHOOK_EVENT" = "PULL_REQUEST_CREATED" ]; then
+          echo "***************************** SKIPPING TF APPLYING ****************************"
+          terraform plan --var-file=stage.tfvars -input=false 
+        echo "*********************************************************************************"
+        else
+          echo terraform apply --var-file=stage.tfvars -input=false -auto-approve
+        fi
       - pip install awscli --upgrade --user
       - echo `aws --version`
       - echo Logging in to Amazon ECR...
@@ -31,11 +37,6 @@ phases:
       - echo Entered the pre_build phase...      
   build:
     commands:
-      - echo CODEBUILD_WEBHOOK_EVENT=$CODEBUILD_WEBHOOK_EVENT
-      - echo CODEBUILD_WEBHOOK_HEAD_REF=$CODEBUILD_WEBHOOK_HEAD_REF
-      - echo CODEBUILD_WEBHOOK_BASE_REF=$CODEBUILD_WEBHOOK_BASE_REF
-      - echo CODEBUILD_WEBHOOK_TRIGGER=$CODEBUILD_WEBHOOK_TRIGGER 
-      - echo CODEBUILD_SRC_DIR=$CODEBUILD_SRC_DIR
       - echo Build started on `date`
       - echo $REP_WEB_URI
       - echo $REP_API_URI
@@ -62,32 +63,37 @@ phases:
       - cd $CODEBUILD_SRC_DIR/
       - echo List directory
       - ls -la
-      #Processing back
-      - sed -i "s|__REP_API_URI__|$REP_API_URI:latest|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__MONGO_DB__|$MONGO_DB|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__AWS_REGION__|$AWS_REGION|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__AWS_S3_BUCKET__|$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__EMAIL_USER__|$EMAIL_USER|" pixelistic_be/manifests/deployment.yml
-      - sed -i "s|__EMAIL_PASS__|$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
-      - cat pixelistic_be/manifests/deployment.yml    
-      - echo Push the latest image to cluster
-      - kubectl apply -f pixelistic_be/manifests/deployment.yml 
-      - kubectl apply -f pixelistic_be/manifests/service.yml      
-      #Processing front
-      - REACT_APP_API_WEB=http://$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-      - echo REACT_APP_API_WEB=$REACT_APP_API_WEB
-      - sed -i "s|__REP_WEB_URI__|$REP_WEB_URI:latest|" pixelistic_fe/manifests/deployment.yml
-      - sed -i "s|__REACT_APP_API_WEB__|$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml
-      - sed -i "s|__REACT_APP_AWS_S3__|$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml
-      - cat pixelistic_fe/manifests/deployment.yml
-      - echo Push the latest image to cluster
-      - kubectl apply -f pixelistic_fe/manifests/deployment.yml 
-      - kubectl apply -f pixelistic_fe/manifests/service.yml
-      #Update env for back
-      - FRONT_URL=http://$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-      - echo FRONT_URL=$FRONT_URL
-      - sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
-      - cat pixelistic_be/manifests/deployment.yml
-      - kubectl apply -f pixelistic_be/manifests/deployment.yml
+      #Deployment
+      - |
+        if [ "$CODEBUILD_WEBHOOK_EVENT" = "PULL_REQUEST_CREATED" ]; then
+          echo "***************************** SKIPPING DEPLOYING ******************************"
+          echo "Pull request - no deployment."
+          echo "*******************************************************************************"
+        else
+          sed -i "s|__REP_API_URI__|$REP_API_URI:latest|" pixelistic_be/manifests/deployment.yml
+          sed -i "s|__MONGO_DB__|$MONGO_DB|" pixelistic_be/manifests/deployment.yml
+          sed -i "s|__AWS_ACCESS_KEY_ID__|$AWS_ACCESS_KEY_ID|" pixelistic_be/manifests/deployment.yml
+          sed -i "s|__AWS_SECRET_ACCESS_KEY__|$AWS_SECRET_ACCESS_KEY|" pixelistic_be/manifests/deployment.yml
+          sed -i "s|__AWS_REGION__|$AWS_REGION|" pixelistic_be/manifests/deployment.yml
+          sed -i "s|__AWS_S3_BUCKET__|$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml
+          sed -i "s|__EMAIL_USER__|$EMAIL_USER|" pixelistic_be/manifests/deployment.yml
+          sed -i "s|__EMAIL_PASS__|$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
+          cat pixelistic_be/manifests/deployment.yml    
+          echo Push the latest image to cluster
+          kubectl apply -f pixelistic_be/manifests/deployment.yml 
+          kubectl apply -f pixelistic_be/manifests/service.yml      
+          REACT_APP_API_WEB=http://$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo REACT_APP_API_WEB=$REACT_APP_API_WEB
+          sed -i "s|__REP_WEB_URI__|$REP_WEB_URI:latest|" pixelistic_fe/manifests/deployment.yml
+          sed -i "s|__REACT_APP_API_WEB__|$REACT_APP_API_WEB|" pixelistic_fe/manifests/deployment.yml
+          sed -i "s|__REACT_APP_AWS_S3__|$REACT_APP_AWS_S3|" pixelistic_fe/manifests/deployment.yml
+          cat pixelistic_fe/manifests/deployment.yml
+          echo Push the latest image to cluster
+          kubectl apply -f pixelistic_fe/manifests/deployment.yml 
+          kubectl apply -f pixelistic_fe/manifests/service.yml
+          FRONT_URL=http://$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo FRONT_URL=$FRONT_URL
+          sed -i "s|__FRONT_URL__|$FRONT_URL|" pixelistic_be/manifests/deployment.yml
+          cat pixelistic_be/manifests/deployment.yml
+          kubectl apply -f pixelistic_be/manifests/deployment.yml
+        fi
