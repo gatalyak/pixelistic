@@ -6,7 +6,7 @@ Please set your environments from env.example to build and run applications. The
 3. Jenkinsfile_docker - pipeline for docker-compose deploy.
 
 For jenkins pipelines please setup the hosts where the application will be deployed in file deployment/dev-servers as:
-[pixelistic]  - for local deployment
+[pixelistic]  - for local deployment 
 
 [docker] - for docker-compose deployment
 ### To create environment to deploy the infrastructure with terrafrom and build CI/CD with AWS:
