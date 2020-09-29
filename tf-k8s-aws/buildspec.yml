@@ -8,6 +8,8 @@ phases:
 
   pre_build:
     commands:
+      - echo CODEBUILD_WEBHOOK_EVENT=$CODEBUILD_WEBHOOK_EVENT
+      - echo CODEBUILD_WEBHOOK_HEAD_REF=$CODEBUILD_WEBHOOK_HEAD_REF
       - cd tf-k8s-aws
       - terraform --version
       - terraform init -input=false
