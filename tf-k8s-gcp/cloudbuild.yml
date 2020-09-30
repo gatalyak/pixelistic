@@ -5,20 +5,20 @@ steps:
     args: 
     - '-c'
     - | 
-        cd tf-k8s-gcp/ &&
-        terraform init -input=false &&
-        if [ "$BRANCH_NAME" = "master" ]; then
-          terraform apply --var-file=stage.tfvars -input=false -auto-approve &&
-        else
-          echo "***************************** SKIPPING APPLYING *******************************"
-          echo "Branch '$BRANCH_NAME' does not allow to trigger apply."
-          echo "*******************************************************************************"
-          terraform plan --var-file=stage.tfvars -input=false &&
-        fi        
-        export PIXELISTIC_CLUSTER_NAME=$(terraform output cluster_name) &&
-        export PIXELISTIC_REGION=$(terraform output region) &&
+        cd tf-k8s-gcp/ && \
+        terraform init -input=false && \ 
+        if [ "$BRANCH_NAME" = "master" ]; then && \
+          terraform apply --var-file=stage.tfvars -input=false -auto-approve && \
+        else && \
+          echo "***************************** SKIPPING APPLYING *******************************" && \
+          echo "Branch '$BRANCH_NAME' does not allow to trigger apply." && \
+          echo "*******************************************************************************" && \
+          terraform plan --var-file=stage.tfvars -input=false && \
+        fi && \       
+        export PIXELISTIC_CLUSTER_NAME=$(terraform output cluster_name) && \
+        export PIXELISTIC_REGION=$(terraform output region) && \
         env | grep "^PIXELISTIC_" > /workspace/build_vars
-        
+
   # This step builds the container image.
   - name: 'gcr.io/cloud-builders/docker'
     id: Build Frontend
