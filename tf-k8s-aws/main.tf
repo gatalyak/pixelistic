@@ -1,3 +1,7 @@
+module eew {
+  sasa
+
+
 /*====
 Variables used across all modules
 ======*/
