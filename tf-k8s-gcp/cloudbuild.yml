@@ -112,7 +112,7 @@ steps:
         FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') && \
         BACK_URL=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') && \
         echo FRONT_URL=http://$$FRONT_URL && \
-        echo BACK_URL=http://$$FRONT_URL:3000
+        echo BACK_URL=http://$$BACK_URL:3000
       else
         echo "***************************** SKIPPING DEPLOYING ******************************"
         echo "Branch '$BRANCH_NAME' does not allow to trigger deployment."
