@@ -7,10 +7,10 @@ steps:
     - | 
         cd tf-k8s-gcp/ && \
         terraform init -input=false &&
-        if [ "$BRANCH_NAME" = "master" ]; then &&
+        if [ "$BRANCH_NAME" = "master" ]; then
           terraform apply --var-file=stage.tfvars -input=false -auto-approve
         else 
-          echo "***************************** SKIPPING APPLYING *******************************"
+          echo "***************************** SKIPPING APPLYING *******************************" &&
           echo "Branch '$BRANCH_NAME' does not allow to trigger apply."
           echo "*******************************************************************************"
           terraform plan --var-file=stage.tfvars -input=false
