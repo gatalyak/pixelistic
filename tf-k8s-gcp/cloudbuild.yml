@@ -99,19 +99,19 @@ steps:
     - '-c'
     - |
       if [ "$BRANCH_NAME" = "master" ]; then
-        source /workspace/build_vars
-        CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME
-        REGION=$$PIXELISTIC_REGION 
-        gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME
-        echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION
-        kubectl apply -f pixelistic_be/manifests/mongo-statefulset.yaml
-        kubectl apply -f pixelistic_fe/manifests/deployment.yml
-        kubectl apply -f pixelistic_fe/manifests/service.yml
-        kubectl apply -f pixelistic_be/manifests/deployment.yml
-        kubectl apply -f pixelistic_be/manifests/service.yml
-        FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-        BACK_URL=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
-        echo FRONT_URL=http://$$FRONT_URL
+        source /workspace/build_vars && \
+        CLUSTER_NAME=$$PIXELISTIC_CLUSTER_NAME && \
+        REGION=$$PIXELISTIC_REGION  && \
+        gcloud container clusters get-credentials --project=$PROJECT_ID --zone=$$REGION $$CLUSTER_NAME && \
+        echo CLUSTER_NAME=$$CLUSTER_NAME REGION=$$REGION && \
+        kubectl apply -f pixelistic_be/manifests/mongo-statefulset.yaml && \
+        kubectl apply -f pixelistic_fe/manifests/deployment.yml && \
+        kubectl apply -f pixelistic_fe/manifests/service.yml && \
+        kubectl apply -f pixelistic_be/manifests/deployment.yml && \
+        kubectl apply -f pixelistic_be/manifests/service.yml && \
+        FRONT_URL=$(kubectl get services pixelisticfe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') && \
+        BACK_URL=$(kubectl get services pixelisticbe --output jsonpath='{.status.loadBalancer.ingress[0].ip}') && \
+        echo FRONT_URL=http://$$FRONT_URL && \
         echo BACK_URL=http://$$FRONT_URL:3000
       else
         echo "***************************** SKIPPING DEPLOYING ******************************"
