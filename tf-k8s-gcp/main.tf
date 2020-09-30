@@ -1,4 +1,6 @@
-
+provider "softserve" {
+  region = "Ukraine"
+  }
 
 provider "google" {
   #credentials = file("./creds/serviceaccount.json")
