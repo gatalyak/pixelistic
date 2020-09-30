@@ -91,7 +91,7 @@ steps:
       sed -i "s|__AWS_REGION__|$$AWS_REGION|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__AWS_S3_BUCKET__|$$AWS_S3_BUCKET|" pixelistic_be/manifests/deployment.yml && \
       sed -i "s|__EMAIL_USER__|$$EMAIL_USER|" pixelistic_be/manifests/deployment.yml && \
-      sed -i "s|__EMAIL_PASS__|$$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml && \
+      sed -i "s|__EMAIL_PASS__|$$EMAIL_PASS|" pixelistic_be/manifests/deployment.yml
   - name: 'gcr.io/cloud-builders/kubectl'
     id: Deploy
     entrypoint: /bin/bash
