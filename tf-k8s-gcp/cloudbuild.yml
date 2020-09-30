@@ -7,7 +7,7 @@ steps:
     - | 
         cd tf-k8s-gcp/ && \
         terraform init -input=false &&
-        if [ "$BRANCH_NAME" = "master" ]; then
+        if [ "$BRANCH_NAME" = "master" ]; then &&
           terraform apply --var-file=stage.tfvars -input=false -auto-approve
         else 
           echo "***************************** SKIPPING APPLYING *******************************"
