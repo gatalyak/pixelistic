@@ -65,6 +65,7 @@ phases:
       - ls -la
       #Deployment
       - |
+        echo CODEBUILD_WEBHOOK_EVENT=$CODEBUILD_WEBHOOK_EVENT
         if [ "$CODEBUILD_WEBHOOK_EVENT" = "PULL_REQUEST_CREATED" ]; then
           echo "***************************** SKIPPING DEPLOYING ******************************"
           echo "Pull request - no deployment."
