@@ -1,5 +1,5 @@
-# pixelistic
-## This is for educational purpose only to show how the application was dockerized and deployed to the azure and aws clouds
+# Pixelistic application
+## This is for educational purpose only to show CI/CD pipeline using Azure, AWS and GCP cloud providers
 Please set your environments from env.example to build and run applications. The pipelines are:
 1. azure-pipelines.yml - pipepine for Azure DevOps.
 2. Jenkinsfile - pipeline for local deploy.
@@ -47,5 +47,11 @@ You can use different environments to deploy infrastructure with terraform:
 
 terraform apply --var-file=stage.tfvars 
 
+### Folder structure for CI/CD pipelines
+```
+tf-k8s-aws - pipeline for AWS cloud provider
+tf-k8s-gcp - pipeline for GCP cloud provider
+
+```
 
 
