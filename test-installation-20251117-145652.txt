@@ -1,0 +1,32 @@
+GitHub App Installation Token Test File
+==========================================
+
+This file was created using GitHub App Installation Token approach.
+(Same method as lambda.py - fully automated, no user interaction!)
+
+Details:
+- App ID: 2306578
+- Installation ID: 95159484
+- Repository: gatalyak/pixelistic
+- Branch: test/installation-token-20251117-145652
+- Timestamp: 2025-11-17T14:56:53.872473
+
+Token Type: Installation Access Token
+Token Lifetime: 1 hour
+Authentication Method: App ID + Private Key → JWT → Installation Token
+
+This approach validates:
+✅ Private key loading
+✅ JWT generation
+✅ Installation ID discovery
+✅ Installation access token generation
+✅ Branch creation
+✅ File creation
+✅ Pull request creation
+✅ PR comment posting
+
+Perfect for:
+🤖 Automated systems
+🔄 CI/CD pipelines
+⚡ Server-side applications
+🔧 Lambda functions
